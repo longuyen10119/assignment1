@@ -1,0 +1,19 @@
+{
+    groups: [
+        {
+            name: "Long",
+            members: ["LOng", ]
+            admins: ['Long']
+            chat-room: ['Assignment CHat', 'Hangout']
+        }
+    ]
+}
+
+let group = data.groups
+for(let i =0; i\)
+
+
+let db={}
+let [] users:
+let [] groups:[
+    
