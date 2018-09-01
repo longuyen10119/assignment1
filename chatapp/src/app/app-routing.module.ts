@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { GroupComponent } from './group/group.component';
 
 const routes: Routes = [
+  {path:'', component:LoginComponent},
   {path:'login', component:LoginComponent},
   {path:'chatroom', component:ChatroomComponent},
   {path:'group', component:GroupComponent}
