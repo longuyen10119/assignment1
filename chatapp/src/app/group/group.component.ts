@@ -50,7 +50,6 @@ export class GroupComponent implements OnInit {
       'groupAdmin': admin,
       'users': []
     }
-    console.log(group);
     this._groupService.createGroup(group).subscribe(
       data => {
         this.getGroups();

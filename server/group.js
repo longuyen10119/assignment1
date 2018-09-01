@@ -37,14 +37,35 @@ module.exports = (app, fs) => {
     });
     // Add group via post
     app.post('/api/group', (req, res) => {
-        console.log('new group in group.js ');
-        console.log(req.body);
+        //when adding a new Group with a groupAdmin
+        // i should check whether the admin exists in the users
+        // if admin does not exist in users, add that user to users list
+        // if admin does, add the admin to users members
+
         // try to take out a newGroup to see if that still works with req.body
-        // let newGroup = {'name': req.body.name,
-        //                 'groupAdmin': req.body.groupAdmin }
+        let newGroup = req.body;
         
-        obj.groups.push(req.body);
-        res.send(req.body);
+        //check if new group admin is in users
+        let currentUser = obj.users.find(x => x.name == req.body.groupAdmin);
+        //if not found, add new user to users list 
+        if (currentUser == undefined){
+            let id = 1;
+            if (obj.users.length > 0) {
+                let maximum = Math.max.apply(Math, obj.users.map(function (f) { return f.id; }));
+                id = maximum + 1;
+            }
+            let newUser = {"id": id, "name": req.body.groupAdmin, "type": "groupAdmin"};
+            obj.users.push(newUser);
+            //then add user id to group members
+            newGroup.users.push(id);
+        }else{//if found in users list
+            //add that users ID to group members
+            newGroup.users.push(currentUser.id);
+        }
+        
+
+        obj.groups.push(newGroup);
+        res.send(newGroup);
         fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
             if (err) throw err;
         })
