@@ -1,41 +1,57 @@
-<!-- <form>
-  <fieldset>
-   
-    <div class="form-group">
-      <label for="exampleSelect1">Groups</label>
-      <select class="form-control" id="exampleSelect1">
-        <option>Griffith ICT</option>
-        <option>Griffith Uni</option>
-        <option>Griffith BCS</option>
-      </select>
+<div class="container">
+  <div class="row">
+    <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+      <div class="card-header">Groups</div>
+      <div class="card-body">
+        <tr *ngFor="let group of groups">
+          <td>
+            {{group.name}}
+          </td>
+          <td>
+            <button  class="btn btn-xs btn-primary" (click)="show=!show; getUsersInGroup(group)">{{show ? 'Hide' : 'Show'}}</button>
+          </td>
+          <td>
+            <button (click)="deleteGroup(group)" class="btn btn-xs btn-warning">Delete</button>
+          </td>
+        </tr>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="exampleSelect2">Channels</label>
-      <select multiple="" class="form-control" id="exampleSelect2">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-      </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </fieldset>
-</form> -->
-
-<div class="card text-white bg-info mb-3" style="max-width: 20rem;">
-  <div class="card-header">Groups</div>
-  <div class="card-body">
-    <tr *ngFor="let group of groups">
-      <td>
-        {{group.name}}
-      </td>
-      <td>
-        <button (click)="deleteGroup(group)" class="btn btn-xs btn-primary ">Choose</button>
-      </td>
-      <td>
-        <button (click)="deleteGroup(group)" class="btn btn-xs btn-warning">Delete</button>
-      </td>
-    </tr>
+    <div *ngIf="show" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+        <div class="card-header">Users in Group</div>
+        <div ng- class="card-body">
+          <tr *ngFor="let user of usersCrazy">
+            <td>
+              {{user.name}}
+            </td>
+            <td>
+              <button (click)="deleteGroup(group)" class="btn btn-xs btn-warning">Delete</button>
+            </td>
+          </tr>
+        </div>
+      </div>
   </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+            <fieldset>
+              <div class="form-group">
+                <label for="groupname">Enter Group Name</label>
+                <input [(ngModel)]="groupname"  type="text" placeholder="Group Name" class="form-control">
+                <input [(ngModel)]="groupadmin" type="text" placeholder="Group Admin" class="form-control">
+              </div>
+              <button type="submit" (click)="createGroup(groupname, groupadmin)" class="btn btn-primary">Add</button>
+            </fieldset>
+        </div>
+        <div *ngIf="show" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+            <fieldset>
+              <div class="form-group">
+                <label for="groupname">Enter User Name</label>
+                <input [(ngModel)]="groupname"  type="text" placeholder="Group Name" class="form-control">
+                <input [(ngModel)]="groupadmin" type="text" placeholder="Group Admin" class="form-control">
+              </div>
+              <button type="submit" (click)="createGroup(groupname, groupadmin)" class="btn btn-primary">Add</button>
+            </fieldset>
+        </div>
+    </div>
 </div>

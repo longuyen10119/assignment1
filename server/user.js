@@ -3,7 +3,6 @@ module.exports = (app, fs) => {
     //read data.JSON file, pass the data into obj
     fs.readFile('data.JSON', 'utf-8', (err, data) => {
         if (err) {
-            console.log("user");
             console.log(err);
         } else {
             obj = JSON.parse(data);

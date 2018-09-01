@@ -14,8 +14,9 @@ export class AppComponent {
   title = 'chatapp';
   logOut(event){
     event.preventDefault();
+    sessionStorage.clear();
     window.alert('You have been log out');
-    sessionStorage.clear;
+    
     // this.router.navigateByUrl('/login');
   }
 }

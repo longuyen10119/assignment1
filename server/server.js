@@ -27,12 +27,18 @@ let data = {
   "users":[
       {id:1, name: "Long", type: "admin"},
       {id:2, name: "James", type: "groupadmin"},
-      {id:3, name: "Smith"},
+      {id:3, name: "Smith", type: "normal"},
+      {id:4, name: "Ben", type: "normal"},
+      {id:5, name: "Jason", type: "normal"},
+      {id:6, name: "Thomas", type: "normal"},
+      {id:6, name: "Alex", type: "normal"}
       ],
   "groups":[
-      {name: "Griffith", groupAdmin: "James", channels: [1,2,3]},
-      {name: "UQ", groupAdmin: "Long", channels: [4,5,6]},
-      {name: "Bond", groupAdmin: "Smith", channels: [7,8,9]},
+      {name: "Griffith", groupAdmin: "James", users: [1]},
+      {name: "UQ", groupAdmin: "Long", users: [2]},
+      {name: "Bond", groupAdmin: "Ben", users: [3]},
+      {name: "MIT", groupAdmin: "Smith", users: [4]},
+      {name: "HARVARD", groupAdmin: "James", users: [5]}
       ],
   "roles":[
       {id: 1},

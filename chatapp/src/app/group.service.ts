@@ -17,7 +17,11 @@ export class GroupService {
   getGroups() {
     return this.http.get('http://localhost:3000/api/groups');
   }
+  getUsersInGroup(group){
 
+    let body = JSON.stringify(group);
+    return this.http.post('http://localhost:3000/api/group/users/', body, httpOptions);
+  }
   createGroup(group) {
     let body = JSON.stringify(group);
     return this.http.post('http://localhost:3000/api/group/', body, httpOptions);
@@ -28,7 +32,7 @@ export class GroupService {
     return this.http.put('http://localhost:3000/api/group/' + group.groupname, body, httpOptions);
   }
   deleteGroup(group) {
-    return this.http.delete('http://localhost:3000/api/group/' + group.groupname);
+    return this.http.delete('http://localhost:3000/api/group/' + group.name);
   }
 }
 
