@@ -1,3 +1,4 @@
+<h2>Hello, {{displayName}}</h2>
 <div class="container">
   <div class="row">
     <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
@@ -32,10 +33,10 @@
   </div>
 </div>
 <div class="container">
-    <div class="row">
-        <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+    <div  class="row">
+        <div *ngIf="usertype==1" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
             <fieldset>
-              <div class="form-group">
+              <div  class="form-group">
                 <label for="groupname">Enter Group Name</label>
                 <input [(ngModel)]="groupname"  type="text" placeholder="Group Name" class="form-control">
                 <input [(ngModel)]="groupadmin" type="text" placeholder="Group Admin" class="form-control">
@@ -47,8 +48,8 @@
             <fieldset>
               <div class="form-group">
                 <label for="groupname">Enter User Name</label>
-                <input [(ngModel)]="groupname"  type="text" placeholder="Group Name" class="form-control">
-                <input [(ngModel)]="groupadmin" type="text" placeholder="Group Admin" class="form-control">
+                <input [(ngModel)]="groupname"  type="text" placeholder="User Name" class="form-control">
+                <!-- <input [(ngModel)]="groupadmin" type="text" placeholder="Group Admin" class="form-control"> -->
               </div>
               <button type="submit" (click)="createGroup(groupname, groupadmin)" class="btn btn-primary">Add</button>
             </fieldset>
