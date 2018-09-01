@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { GroupService } from "../group.service";
-
+import {Router} from "@angular/router";
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
@@ -11,11 +11,15 @@ export class GroupComponent implements OnInit {
   public groups;
   public groupname;
 
-  constructor(private _groupService: GroupService) { }
+  constructor(private router:Router, private _groupService: GroupService) { }
 
   ngOnInit() {
-    this.getGroups();
-    console.log('Get Group in group component ts')
+    if(sessionStorage.length == 0){
+      window.alert('Havent logged in');
+      this.router.navigateByUrl('/login');
+    }else{
+      this.getGroups();
+    }
   }
   getGroups() {
     this._groupService.getGroups().subscribe(

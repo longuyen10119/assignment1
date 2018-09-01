@@ -25,8 +25,8 @@ app.get('/students', function(req,res){
 
 let data = {
   "users":[
-      {id:1, name: "Long"},
-      {id:2, name: "James"},
+      {id:1, name: "Long", type: "admin"},
+      {id:2, name: "James", type: "groupadmin"},
       {id:3, name: "Smith"},
       ],
   "groups":[
@@ -34,7 +34,7 @@ let data = {
       {name: "UQ", groupAdmin: "Long", channels: [4,5,6]},
       {name: "Bond", groupAdmin: "Smith", channels: [7,8,9]},
       ],
-  "channels":[
+  "roles":[
       {id: 1},
       {id: 2},
       {id: 3},
@@ -46,6 +46,7 @@ fs.writeFile('data.JSON', JSON.stringify(data), 'utf8',  (err) =>{
 })
 require('./user.js')(app,fs);
 require('./group.js')(app,fs);
+require('./login.js')(app,fs);
 
 app.listen(3000, function(){ //listen on port 8000
   console.log('Server running');

@@ -1,8 +1,9 @@
 module.exports = (app, fs) => {
     let obj;
     //read data.JSON file, pass the data into obj
-    fs.readFile('./data.JSON', 'utf-8', (err, data) => {
+    fs.readFile('data.JSON', 'utf-8', (err, data) => {
         if (err) {
+            console.log("user");
             console.log(err);
         } else {
             obj = JSON.parse(data);
@@ -26,8 +27,8 @@ module.exports = (app, fs) => {
         })
     });
 
-    // Update groups via put (not working because cant id which record to change... add id to groups)
-    // app.put('/api/group/:groupname', function (req, res) {
+    // Authenticate users
+    // app.put('/api/group/:name', function (req, res) {
     //     console.log('update group');
     //     let g = obj.groups.find(x => x.groupname == groupname);
     //     g.groupname = req.body.groupname;

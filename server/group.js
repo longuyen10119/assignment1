@@ -9,6 +9,7 @@ module.exports = (app, fs) => {
             obj = JSON.parse(data);
         }
     });
+    console.log("Group");
     console.log(obj)
 
     // Get Groups via get
