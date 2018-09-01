@@ -56,7 +56,7 @@ module.exports = (app, fs) => {
             }
             let newUser = {"id": id, "name": req.body.groupAdmin, "type": "groupAdmin"};
             obj.users.push(newUser);
-            //then add user id to group members
+            //then add user id to groupmembers
             newGroup.users.push(id);
         }else{//if found in users list
             //add that users ID to group members
