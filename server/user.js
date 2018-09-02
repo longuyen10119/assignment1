@@ -31,35 +31,46 @@ module.exports = (app, fs) => {
         })
     });
 
-    // Authenticate users
-    // app.put('/api/group/:name', function (req, res) {
-    //     console.log('update group');
-    //     let g = obj.groups.find(x => x.groupname == groupname);
-    //     g.groupname = req.body.groupname;
-    //     res.send(g);
-    // });
+    // Update users
+    app.put('/api/group/:name', function (req, res) {
+        // console.log('update student');
+        // let id = req.params.id;
+        // let s = students.find(x => x.id == id);
+        // s.name = req.body.name;
+        // s.gpa = req.body.gpa;
+        // res.send(s);
+        console.log('update User');
+        let index = obj.users.findIndex(x => x.id = req.body.id);
+        obj.users[index].type = 'groupadmin';
+        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
+            if (err) throw err;
+        })
+        res.send(obj.users[index]);
+    });
 
     app.delete('/api/user/:username', function (req, res) {
         console.log('delete user');
         let usern = req.params.username;
         console.log(usern);
-        // let g = students.find(x => x.id == id);
+        let tempuser = obj.users.find(x => x.name ==usern);
+        let id = tempuser.id;
         obj.users = obj.users.filter(x => x.name != usern);
-        res.send(obj.users);
-        console.log(obj.users);
         
+        for(let i =0;i< obj.groups.length;i++){
+            if(obj.groups[i].groupAdmin == id){
+                obj.groups[i].groupAdmin = 0;
+            }
+            let newindex = obj.groups[i].users.findIndex(x => x==id);
+            obj.groups[i].users.splice(newindex,1);
+        }
         //now gotta find if the user is in any group and then delete
         // first find user ID of this current user
-        // let currentuser = obj.users.find(x => x.name ==usern);
-        // let id = currentuser.id;
-        // // go through every group
-        // for (let i =0; i<obj.groups.length;i++){
-        //     obj.groups[i].users = obj.groups[i].users.filter(x => x!=id);
-        // }
-
+        
+        
         fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
             if (err) throw err;
         })
+        res.send(obj.users);
     });
 
 

@@ -42,7 +42,7 @@
               {{userin.name}} - {{userin.type}}
             </td>
             <td *ngIf="usertype!=3">
-              <button (click)="deleteGroup(group)" class="btn btn-xs btn-warning">Remove</button>
+              <button (click)="removeUserFromGroup(userin)" class="btn btn-xs btn-warning">Remove</button>
             </td>
           </tr>
         </div>

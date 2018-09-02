@@ -17,9 +17,9 @@ export class GroupService {
   getGroups() {
     return this.http.get('http://localhost:3000/api/groups');
   }
-  addAUserToGroup(n, t){
-    let body = JSON.stringify(n);
-    return this.http.put('http://localhost:3000/api/group/add/' + body, httpOptions);
+  addAUserToGroup(temp){
+    let body = JSON.stringify(temp);
+    return this.http.post('http://localhost:3000/api/group/add/' + body, httpOptions);
   }
   getUsersInGroup(group){
     let body = JSON.stringify(group);

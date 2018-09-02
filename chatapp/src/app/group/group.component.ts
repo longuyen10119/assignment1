@@ -56,6 +56,7 @@ export class GroupComponent implements OnInit {
   }
   //Add users to Specific group
   addAUserToGroup(n, t){
+    //n is name and t is type
     console.log(n);
     console.log(t);
     // need to know which group to add users to
@@ -65,9 +66,9 @@ export class GroupComponent implements OnInit {
     let userNameToAdd = n;
     let roleToAdd = t;
     let groupToAdd = this.currentgroup;
-
-    this._groupService.addAUserToGroup(n, t).subscribe(
-      data => {},
+    let temp = {name: n, type: t, group: groupToAdd}
+    this._groupService.addAUserToGroup(temp).subscribe(
+      data => {this.getUsersInGroup(this.currentgroup)},
       err => console.log('Error adding this user to the group'),
       () => console.log()
     );
@@ -136,6 +137,9 @@ export class GroupComponent implements OnInit {
         console.error('Error deleting group');
       }
     );
+  }
+  removeUserFromGroup(){
+
   }
 
   //////////////////adding Some User Service here
