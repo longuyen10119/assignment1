@@ -12,6 +12,9 @@ import {Router} from "@angular/router";
 export class AppComponent {
   constructor(private router:Router){}
   title = 'chatapp';
+  ngOnInit() {
+    sessionStorage.clear();
+  }
   logOut(event){
     event.preventDefault();
     sessionStorage.clear();

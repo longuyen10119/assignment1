@@ -16,6 +16,7 @@ export class UserService {
 
   // Uses http.get() to load data from a single API endpoint
   getUsers() {
+    console.log('getusers is being called in service');
     return this.http.get('http://localhost:3000/api/users');
   }
 

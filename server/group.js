@@ -31,10 +31,12 @@ module.exports = (app, fs) => {
             let name = obj.users.find(x => x.id == gid)
             users.push(name);
         }
-        console.log('Server side--------------')
-        console.log(users);
         res.send(users);
     });
+    // Add user to a group
+    app.put('api/group/add/'), (req, res) =>{
+        
+    }
     // Add group via post
     app.post('/api/group', (req, res) => {
         //when adding a new Group with a groupAdmin

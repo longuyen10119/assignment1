@@ -10,18 +10,23 @@ module.exports = (app, fs) => {
     });
 
     // Get User via get
-    app.get('/api/user', (req, res) => {
+    app.get('/api/users', (req, res) => {
+        console.log('get users on server');
         res.send(obj.users);
     });
 
     // Add User via post
     app.post('/api/user', (req, res) => {
         console.log('New User');
-        let newUser = {"name": req.body.name};
-        console.log(req.body.name);
+        let id = 1;
+        if (obj.users.length > 0) {
+            let maximum = Math.max.apply(Math, obj.users.map(function (f) { return f.id; }));
+            id = maximum + 1;
+        }
+        let newUser = {"id": id, "name": req.body.name, "type": "normal"};
         obj.users.push(newUser);
         res.send(newUser);
-        fs.writeFile('data/data.json', JSON.stringify(obj), 'utf8', (err) =>{
+        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
             if (err) throw err;
         })
     });

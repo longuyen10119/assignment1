@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GroupService } from "../group.service";
 import { LoginService } from "../login.service";
+import { UserService } from "../user.service";
 import {Router} from "@angular/router";
 @Component({
   selector: 'app-group',
@@ -10,16 +11,22 @@ import {Router} from "@angular/router";
 })
 export class GroupComponent implements OnInit {
   public groups;
-  public usersCrazy;
+  public usersInGroup;
   public groupname;
   //1 being super, 2 being groupAdmin, 3 being normal
   public usertype;
+  public usertypestring;
   public displayName;
+  chooseusertype: String;
+  public currentgroup;
+
+  public users;
   
 
 
   constructor(private router:Router, private _groupService: GroupService,
-                private _loginService: LoginService) { }
+                private _loginService: LoginService,
+                private _userService: UserService) { }
 
   ngOnInit() {
     //when group component is loading
@@ -28,46 +35,57 @@ export class GroupComponent implements OnInit {
     if(sessionStorage.length == 0){
       window.alert('Havent logged in');
       this.router.navigateByUrl('/login');
-    }else{// also when loading check user against user database if user is normal, admin or super
+    }else{// also when loading check user in sessionStorage if user is normal, admin or super
       this.displayName = sessionStorage.getItem('user');
-      let tempname = sessionStorage.getItem('user');
-      // console.log('Username from ngONIT');
-      // console.log(tempname);
-      let tempuser;
-      this._loginService.checkLogin(tempname).subscribe(
-        data => { tempuser = data;
-                  console.log('Number 1' + data)},
-        err => console.log('error when loading group component'),
-        () => {console.log(tempuser.type);
-              switch(tempuser.type){
-                case 'super':
-                  this.usertype = 1;
-                  break;
-                case 'groupadmin':
-                  this.usertype = 2;
-                  break;
-                case 'normal':
-                  this.usertype = 3;
-                  break;};
-                  console.log(this.usertype);
-                }
-      );
-      // console.log('HELLO ARE YOU HERE?');
-      // console.log(this.usertype);
+      this.usertypestring = sessionStorage.getItem('usertype');
+      switch(this.usertypestring){
+        case 'super':
+          this.usertype = 1;
+          break;
+        case 'groupadmin':
+          this.usertype = 2;
+          break;
+        case 'normal':
+          this.usertype = 3;
+          break;
+        }
+    }
       // load groups
       this.getGroups();
-    }
+      this.getUsers();
   }
+  //Add users to Specific group
+  addAUserToGroup(n, t){
+    console.log(n);
+    console.log(t);
+    // need to know which group to add users to
+    // what the username is, and role to add
+    // current group is in currentgroup
+    // username is in n, and role is in t
+    let userNameToAdd = n;
+    let roleToAdd = t;
+    let groupToAdd = this.currentgroup;
+
+    this._groupService.addAUserToGroup(n, t).subscribe(
+      data => {},
+      err => console.log('Error adding this user to the group'),
+      () => console.log()
+    );
+
+
+  }
+  
   getUsersInGroup(group){
     console.log('hello getUsersInGroup in component');
     console.log(group.name);
+    this.currentgroup = group;
     this._groupService.getUsersInGroup(group).subscribe(
-      data => { this.usersCrazy = data;
+      data => { this.usersInGroup = data;
                 console.log(data)},
       err => console.log('Get users in Group Error'),
       () => console.log('Done get users in group')
     );
-    console.log(this.usersCrazy);
+    console.log(this.usersInGroup);
   }
   getGroups() {
     this._groupService.getGroups().subscribe(
@@ -118,6 +136,44 @@ export class GroupComponent implements OnInit {
       }
     );
   }
+
+  //////////////////adding Some User Service here
+  getUsers() {
+    console.log('getUsers is being called in components');
+    this._userService.getUsers().subscribe(
+      data => { this.users = data; },
+      err => console.error(err),
+      () => console.log('done loading users')
+    );
+  }
+  //Create new users
+  createUser(name) {
+    let user = {
+      name: name
+    };
+    this._userService.createUser(user).subscribe(
+      data => {
+        this.getUsers();
+        return true;
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  }
+  //Delete Users
+  deleteUser(user) {
+    this._userService.deleteUser(user).subscribe(
+      data => {
+        this.getUsers();
+        return true;
+      },
+      error => {
+        console.error('Error deleting group');
+      }
+    );
+  }
+
 
 }
 
