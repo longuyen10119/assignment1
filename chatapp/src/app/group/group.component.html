@@ -13,7 +13,7 @@
                 {{user.name}} - {{user.type}}
               </td>
               <td *ngIf="usertype==1">
-                <button *ngIf="user.type!='super'" (click)="deleteUser(user)" class="btn btn-xs btn-warning">Delete</button>
+                <button *ngIf="user.type!='super'" (click)="deleteUser(user); show=false" class="btn btn-xs btn-warning">Delete</button>
               </td>
             </tr>
           </div>

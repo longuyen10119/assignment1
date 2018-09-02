@@ -47,6 +47,16 @@ module.exports = (app, fs) => {
         obj.users = obj.users.filter(x => x.name != usern);
         res.send(obj.users);
         console.log(obj.users);
+        
+        //now gotta find if the user is in any group and then delete
+        // first find user ID of this current user
+        // let currentuser = obj.users.find(x => x.name ==usern);
+        // let id = currentuser.id;
+        // // go through every group
+        // for (let i =0; i<obj.groups.length;i++){
+        //     obj.groups[i].users = obj.groups[i].users.filter(x => x!=id);
+        // }
+
         fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
             if (err) throw err;
         })

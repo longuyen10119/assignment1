@@ -129,6 +129,7 @@ export class GroupComponent implements OnInit {
     this._groupService.deleteGroup(group).subscribe(
       data => {
         this.getGroups();
+        this.usersInGroup = [];
         return true;
       },
       error => {

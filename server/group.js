@@ -28,6 +28,7 @@ module.exports = (app, fs) => {
         let users = [];
         for(let i=0; i<g.users.length;i++){
             let gid = g.users[i];
+            //check if gid exists in user list
             let name = obj.users.find(x => x.id == gid)
             users.push(name);
         }

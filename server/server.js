@@ -31,7 +31,7 @@ let data = {
       {id:4, name: "Ben", type: "normal"},
       {id:5, name: "Jason", type: "normal"},
       {id:6, name: "Thomas", type: "normal"},
-      {id:6, name: "Alex", type: "normal"}
+      {id:7, name: "Alex", type: "normal"}
       ],
   "groups":[
       {name: "Griffith", groupAdmin: "Nguyen", users: [2,1]},
