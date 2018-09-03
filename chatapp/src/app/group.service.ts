@@ -20,7 +20,12 @@ export class GroupService {
   addAUserToGroup(temp){
     console.log(temp);
     let body = JSON.stringify(temp);
-    return this.http.post('http://localhost:3000/api/group/add/', body, httpOptions);
+    return this.http.post('http://localhost:3000/api/group/add', body, httpOptions);
+  }
+  removeUserFromGroup(temp){
+    console.log(temp);
+    let body = JSON.stringify(temp);
+    return this.http.post('http://localhost:3000/api/group/remove', body, httpOptions);
   }
   getUsersInGroup(group){
     let body = JSON.stringify(group);

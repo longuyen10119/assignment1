@@ -8,28 +8,28 @@
     <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
       <div class="card-header">Channels list in {{currentGroup}}</div>
       <div class="card-body">
-        <tr *ngFor="let group of groups">
+        <tr *ngFor="let channel of channels">
           <td>
-            {{group.name}}
+            {{channel.name}}
           </td>
           <td>
-            <button  class="btn btn-xs btn-primary" (click)="show=!show; getUsersInGroup(group)">{{show ? 'Hide' : 'Show'}}</button>
+            <button  class="btn btn-xs btn-primary" (click)="show=!show; getUsersInChannel(channel)">{{show ? 'Hide' : 'Show'}}</button>
           </td>
           <td *ngIf="usertype==1">
-            <button (click)="deleteGroup(group); show=false" class="btn btn-xs btn-warning">Delete</button>
+            <button (click)="deleteChannel(channel); show=false" class="btn btn-xs btn-warning">Delete</button>
           </td>
         </tr>
       </div>
     </div>
     <div *ngIf="show==true && (usertype==1 || usertype==2)" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
-        <div class="card-header">Users in {{currentgroup.name}} Group</div>
+        <div class="card-header">Users in Channel</div>
         <div ng- class="card-body">
-          <tr *ngFor="let userin of usersInGroup">
+          <tr *ngFor="let user of usersInChannel">
             <td>
-              {{userin.name}} - {{userin.type}}
+              {{user.name}}
             </td>
             <td *ngIf="usertype!=3">
-              <button (click)="removeUserFromGroup(userin)" class="btn btn-xs btn-warning">Remove</button>
+              <button (click)="deleteUserFromChannel(user)" class="btn btn-xs btn-warning">Remove</button>
             </td>
           </tr>
             <button class="btn btn-secondary btn-lg btn-block text-truncate mt-auto" routerLink="/channel" class="btn btn-xs btn-primary">Go to Channels of {{currentgroup.name}}</button>
@@ -43,9 +43,9 @@
         <div  class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
             <div *ngIf="usertype==1" class="form-group">
               <label for="groupname">Enter Channel Name to Add</label>
-              <input [(ngModel)]="addusername"  type="text" placeholder="Channel Name" class="form-control">
+              <input [(ngModel)]="addchannelname"  type="text" placeholder="Channel Name" class="form-control">
               <!-- <input [(ngModel)]="groupadmin" type="text" placeholder="Group Admin" class="form-control"> -->
-              <button type="submit" (click)="createUser(addusername)" class="btn btn-primary">Add</button>
+              <button type="submit" (click)="createChannel(addchannelname)" class="btn btn-primary">Add</button>
             </div>
         </div>
         <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">

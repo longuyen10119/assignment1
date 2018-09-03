@@ -40,9 +40,8 @@ module.exports = (app, fs) => {
         res.send(users);
     });
     // Add user to a group
-    app.post('/api/group/add'), (req, res) =>{
-        console.log(req.body)
-
+    app.post('/api/group/add', (req, res) =>{
+        console.log(req.body);
         let name = req.body.name;
         let type = req.body.type;
         let groupToAdd = req.body.group;
@@ -54,35 +53,22 @@ module.exports = (app, fs) => {
             if (err) throw err;
         })
         res.send(obj.groups[groupindex]);
-    }
+    });
+    // Remove user from a group
+    app.post('/api/group/remove', (req, res) =>{
+        // coming thru object has user id and the group
+        let userid = req.body.id;
+        let groupindex = obj.groups.findIndex(x => x.id==req.body.group.id);
+        
+        obj.groups[groupindex].users = obj.groups[groupindex].users.filter(x => x!=userid);
+        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
+            if (err) throw err;
+        })
+        res.send(obj.groups[groupindex]);
+    });
+    
     // Add group via post
     app.post('/api/group', (req, res) => {
-        //when adding a new Group with a groupAdmin
-        // i should check whether the admin exists in the users
-        // if admin does not exist in users, add that user to users list
-        // if admin does, add the admin to users members
-
-        // try to take out a newGroup to see if that still works with req.body
-        // let newGroup = req.body;
-        
-        // //check if new group admin is in users
-        // let currentUser = obj.users.find(x => x.name == req.body.groupAdmin);
-        // //if not found, add new user to users list 
-        // if (currentUser == undefined){
-        //     let id = 1;
-        //     if (obj.users.length > 0) {
-        //         let maximum = Math.max.apply(Math, obj.users.map(function (f) { return f.id; }));
-        //         id = maximum + 1;
-        //     }
-        //     let newUser = {"id": id, "name": req.body.groupAdmin, "type": "groupAdmin"};
-        //     obj.users.push(newUser);
-        //     //then add user id to groupmembers
-        //     newGroup.users.push(id);
-        // }else{//if found in users list
-        //     //add that users ID to group members
-        //     newGroup.users.push(currentUser.id);
-        // }
-        
         //Getting a group obj with name, groupadmin, and empty list of users
         // req.body obj
         // create a newgroup: 4 things id from func, groupname from req.body.nam, groupadmin id from obj.users, emptylist of users

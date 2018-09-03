@@ -33,16 +33,19 @@ let dataNew = {
         ],
     "groups":[
         {id:1, name: "Griffith", groupAdmin: 2, users: [2,1]},
-        {id:2, name: "UQ", groupAdmin: 4, users: [4,2]},
-        {id:3, name: "Bond", groupAdmin: 3, users: [3]},
-        {id:4, name: "MIT", groupAdmin: 4, users: [4]},
-        {id:5, name: "HARVARD", groupAdmin: 5, users: [5]}
+        {id:2, name: "UQ", groupAdmin: 4, users: [4,2,6]},
+        {id:3, name: "Bond", groupAdmin: 3, users: [3,6]},
+        {id:4, name: "MIT", groupAdmin: 4, users: [4,6]},
+        {id:5, name: "HARVARD", groupAdmin: 5, users: [5,6
+        ]}
         ],
     "channels":[
         {name: 'c1', groupid: 1, users: [5,6,7]},
-        {name: 'c2', groupid: 2, users: [5,6,7]},
-        {name: 'c3', groupid: 4, users: [5,6,7]},
-        {name: 'c4', groupid: 5, users: [5,6,7]}
+        {name: 'c2', groupid: 1, users: [5,6]},
+        {name: 'c3', groupid: 2, users: [3,6,7]},
+        {name: 'c4', groupid: 2, users: [4,6,7]},
+        {name: 'c5', groupid: 3, users: [3,6,7]},
+        {name: 'c6', groupid: 3 , users: [4,6,7]}
         ]
   }
 

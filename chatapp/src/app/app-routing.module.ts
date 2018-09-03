@@ -4,11 +4,13 @@ import { ChatroomComponent } from './chatroom/chatroom.component';
 import { LoginComponent } from './login/login.component';
 import { GroupComponent } from './group/group.component';
 import { ChannelComponent} from './channel/channel.component';
+import { UserComponent} from './user/user.component';
 const routes: Routes = [
   {path:'', component:LoginComponent},
   {path:'login', component:LoginComponent},
   {path:'chatroom', component:ChatroomComponent},
   {path:'group', component:GroupComponent},
+  {path:'user', component:UserComponent},
   {path:'channel', component:ChannelComponent}
 ];
 

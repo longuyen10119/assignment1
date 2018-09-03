@@ -13,8 +13,11 @@ export class ChannelComponent implements OnInit {
   public usertype;
   public usertypestring;
   public displayName;
+  public channels;
+  public usersInChannel;
   chooseusertype: String;
   currentGroup: String;
+  public currentChannel;
 
   ngOnInit() {
     // If you haven't logged in
@@ -37,6 +40,7 @@ export class ChannelComponent implements OnInit {
           break;
         }
     }
+    this.getChannels();
   }
     // List of Channel services-----------
     // getChannels
@@ -46,17 +50,63 @@ export class ChannelComponent implements OnInit {
     // addUserToChannel
     // deleteUserFromChannel
     // ---------------------------
-    getChannels(){
 
+    // get channels in current group
+    getChannels() {
+      this._channelService.getChannels(this.currentGroup).subscribe(
+        data => { this.channels = data;
+                  console.log(data) },
+        err => console.error(err),
+        () => console.log('done loading Channels')
+      );
     }
-    createChannel(){
-
+    // Create new channel within this group
+    createChannel(channel){
+      let temp = {channel: channel, group: this.currentGroup};
+      this._channelService.createChannel(temp).subscribe(
+        data => {
+          if(data==null){
+            window.alert('Channel exists. Try different name');
+          }else{
+            this.getChannels();
+            return true;
+          }
+        },
+        error => {
+          console.error(error);
+        }
+      );
     }
-    deleteChannel(){
-
+    deleteChannel(channel){
+      let temp = {channel: channel.name, group: this.currentGroup};
+      console.log(temp);
+      this._channelService.deleteChannel(temp).subscribe(
+        data => {
+          this.getChannels();
+          this.usersInChannel = [];
+          return true;
+        },
+        error => {
+          console.error('Error deleting channel');
+        }
+      );
     }
-    getUsersInChannel(){
-
+    // get all users in this channel
+    getUsersInChannel(channel){
+      this.currentChannel = channel;
+      console.log(this.currentChannel);
+      localStorage.setItem('channel', this.currentChannel.name);
+      console.log(localStorage.getItem('channel'));
+      this._channelService.getUsersInChannel(channel).subscribe(
+        data => {
+          console.log(data);
+          this.usersInChannel = data;
+          return true;
+        },
+        error => {
+          console.error('Error getting all users in channel');
+        }
+      );
     }
     addUserToChannel(){
 

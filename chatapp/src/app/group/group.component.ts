@@ -4,6 +4,8 @@ import { GroupService } from "../group.service";
 import { LoginService } from "../login.service";
 import { UserService } from "../user.service";
 import {Router} from "@angular/router";
+import {FormsModule} from '@angular/forms';
+
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
@@ -72,10 +74,18 @@ export class GroupComponent implements OnInit {
       err => console.log('Error adding this user to the group'),
       () => console.log()
     );
-
-
   }
-  
+  // Remove user from a group
+  removeUserFromGroup(user){
+    //user need to be removed
+    let groupToRemove = this.currentgroup;
+    let temp = {id: user.id, group: groupToRemove}
+    this._groupService.removeUserFromGroup(temp).subscribe(
+      data => {this.getUsersInGroup(this.currentgroup)},
+      err => console.log('Error removing this user to the group'),
+      () => console.log()
+    );
+  }
   getUsersInGroup(group){
     console.log('hello getUsersInGroup in component');
     console.log(group.name);
@@ -112,9 +122,10 @@ export class GroupComponent implements OnInit {
       data => {
         if(data==null){
           window.alert('Group exists. Try different name');
+          return false;
         }else{
           this.getGroups();
-          return false;
+          return true;
         }
       },
       error => {
@@ -134,9 +145,6 @@ export class GroupComponent implements OnInit {
         console.error('Error deleting group');
       }
     );
-  }
-  removeUserFromGroup(){
-
   }
 
   //////////////////adding Some User Service here

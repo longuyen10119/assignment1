@@ -1,0 +1,29 @@
+<div class="card bg-info mb-3">
+  <legend><h3>Hello, {{displayName}}</h3></legend>
+  <h4>You are {{usertypestring}} user</h4>
+</div>
+<div class="container">
+  <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+      <div *ngIf="usertype==1 || usertype==2" class="card-header">List of Users</div>
+      <div class="card-body">
+        <tr *ngFor="let user of users">
+          <td>
+            {{user.name}} - {{user.type}}
+          </td>
+          <td *ngIf="usertype==1">
+            <button *ngIf="user.type!='super'" (click)="deleteUser(user); show=false" class="btn btn-xs btn-warning">Delete</button>
+          </td>
+        </tr>
+      </div>
+    </div>
+</div>
+<div class="container">
+  <div  class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+            <div *ngIf="usertype==1" class="form-group">
+              <label for="groupname">Enter User Name to Add</label>
+              <input [(ngModel)]="addusername"  type="text" placeholder="Username" class="form-control">
+              <!-- <input [(ngModel)]="groupadmin" type="text" placeholder="Group Admin" class="form-control"> -->
+              <button type="submit" (click)="createUser(addusername)" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+</div>

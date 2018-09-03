@@ -8,6 +8,7 @@ import { GroupComponent } from './group/group.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http';
 import { ChannelComponent } from './channel/channel.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { ChannelComponent } from './channel/channel.component';
     ChatroomComponent,
     LoginComponent,
     GroupComponent,
-    ChannelComponent
+    ChannelComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

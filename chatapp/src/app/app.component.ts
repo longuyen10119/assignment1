@@ -12,11 +12,16 @@ import {Router} from "@angular/router";
 export class AppComponent {
   constructor(private router:Router){}
   title = 'chatapp';
+  usertype:String;
   ngOnInit() {
     if(localStorage.length!=0){
-      this.router.navigateByUrl('/group');
+      this.usertype = localStorage.getItem('usertype');
+      if(this.usertype=='super' || this.usertype=='groupadmin'){
+        this.router.navigateByUrl('/user');
+      }else{
+        this.router.navigateByUrl('/group');
+      }
     }
-    // sessionStorage.clear();
   }
   logOut(event){
     event.preventDefault();

@@ -10,19 +10,22 @@ const httpOptions = {
 export class ChannelService {
 
   constructor(private http: HttpClient) { }
-  getChannels() {
+  getChannels(groupname) {
     console.log('getusers is being called in service');
-    return this.http.get('http://localhost:3000/api/channels');
+    return this.http.get('http://localhost:3000/api/channels/' + groupname);
   }
-  createChannel(channel) {
-    let body = JSON.stringify(channel);
+  createChannel(temp) {
+    let body = JSON.stringify(temp);
     return this.http.post('http://localhost:3000/api/channel/', body, httpOptions);
   }
-  deleteChannel(channel) {
-    return this.http.delete('http://localhost:3000/api/channel/' + channel.name);
+  deleteChannel(temp) {
+    let body = JSON.stringify(temp);
+    return this.http.post('http://localhost:3000/api/channeldelete/', body, httpOptions);
   }
   getUsersInChannel(channel){
-    return this.http.get('http://localhost:3000/api/channel/users/' + channel.name, httpOptions);
+    console.log(channel);
+    let body = JSON.stringify(channel);
+    return this.http.post('http://localhost:3000/api/channel/users/', body, httpOptions);
   }
   addUserToChannel(channel,user) {
     let body = JSON.stringify(user);
