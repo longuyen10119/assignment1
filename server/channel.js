@@ -89,7 +89,7 @@ module.exports = (app, fs) => {
     app.post('/api/channel/adduser', (req, res) =>{
         // let temp = {user: name, channel: this.currentChannel.name, groupname: this.currentGroup};
         let usern = req.body.user;
-        let channelname = req.body.user;
+        let channelname = req.body.channel;
         let groupname = req.body.groupname;
 
         // find group index
@@ -103,13 +103,15 @@ module.exports = (app, fs) => {
                 let maximum = Math.max.apply(Math, obj.users.map(function (f) { return f.id; }));
                 id = maximum + 1;
             }
-            let newUser = {"id": id, "name": req.body.name, "type": "normal"};
+            let newUser = {"id": id, "name": usern, "type": "normal"};
             obj.users.push(newUser);
             
             // add user id to the group
             obj.groups[indextempGroup].users.push(id);
             // add user to channel
             // find channel index
+            console.log('Channel ' + channelname);
+            console.log('group id ' + obj.groups[indextempGroup].id);
             let channelindex = obj.channels.findIndex(x => x.name==channelname && x.groupid == obj.groups[indextempGroup].id);
             obj.channels[channelindex].users.push(id);
         }else{
