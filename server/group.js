@@ -42,6 +42,7 @@ module.exports = (app, fs) => {
     // Add user to a group
     app.post('/api/group/add'), (req, res) =>{
         console.log(req.body)
+
         let name = req.body.name;
         let type = req.body.type;
         let groupToAdd = req.body.group;

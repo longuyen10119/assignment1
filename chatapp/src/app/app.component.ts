@@ -13,7 +13,10 @@ export class AppComponent {
   constructor(private router:Router){}
   title = 'chatapp';
   ngOnInit() {
-    sessionStorage.clear();
+    if(sessionStorage.length!=0){
+      this.router.navigateByUrl('/group');
+    }
+    // sessionStorage.clear();
   }
   logOut(event){
     event.preventDefault();
