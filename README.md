@@ -12,7 +12,12 @@ The NodeJS server side is in the folder side.
 
 ## 3. REST API
 #### *The Angular front end should communicate with the Node.js server using a REST API. Describe each route provided, parameters, return values, and what it does.*
-
+⋅⋅* Users
+Routes for user service
+⋅⋅* Groups
+Routes for group service
+⋅⋅* Channels
+Routes for channels service
 ## 4. ANGULAR ARCHITECTURE
 #### *Describe your Angular architecture in terms of components, services, and models.*
 
