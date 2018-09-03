@@ -89,29 +89,34 @@ module.exports = (app, fs) => {
         // also need to update user to groupadmin if isn't already
         
         // pick a unique group id
-        let id = 1;
-        if (obj.groups.length > 0) {
-            let maximum = Math.max.apply(Math, obj.groups.map(function (f) { return f.id; }));
-            id = maximum + 1;
-        }
-        // find the groupadmin id and update the user to group admin
-        let index = obj.users.findIndex(x => x.name==req.body.groupAdmin);
-        let newGroup = {id: id,
-                        name: req.body.name,
-                        groupAdmin: obj.users[index].id,
-                        users: [obj.users[index].id]}
-        // currenlty not being able to change type for stupid reason
-        obj.users[index].type = 'groupadmin';
-        // sol 1 remove the user then add a new one
+        let tempgroup = obj.groups.find(x => x.name==req.body.name);
+        if(typeof tempgroup == "undefined"){
+            let id = 1;
+            if (obj.groups.length > 0) {
+                let maximum = Math.max.apply(Math, obj.groups.map(function (f) { return f.id; }));
+                id = maximum + 1;
+            }
+            // find the groupadmin id and update the user to group admin
+            let index = obj.users.findIndex(x => x.name==req.body.groupAdmin);
+            let newGroup = {id: id,
+                            name: req.body.name,
+                            groupAdmin: obj.users[index].id,
+                            users: [obj.users[index].id]}
+            // currenlty not being able to change type for stupid reason
+            obj.users[index].type = 'groupadmin';
+            // sol 1 remove the user then add a new one
 
-        let newUser = {id: obj.users[index].id, name: obj.users[index].name, type: 'groupadmin'}
-        obj.users.push(newUser);
-        obj.groups.push(newGroup);
-        
-        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
-            if (err) throw err;
-        })
-        res.send(newGroup);
+            let newUser = {id: obj.users[index].id, name: obj.users[index].name, type: 'groupadmin'}
+            obj.users.push(newUser);
+            obj.groups.push(newGroup);
+            
+            fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
+                if (err) throw err;
+            })
+            res.send(newGroup);
+        }else{
+            res.send(null);
+        }
     });
     
     // Update groups via put (not working because cant id which record to change... add id to groups)

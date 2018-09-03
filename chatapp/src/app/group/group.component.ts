@@ -110,8 +110,12 @@ export class GroupComponent implements OnInit {
     }
     this._groupService.createGroup(group).subscribe(
       data => {
-        this.getGroups();
-        return true;
+        if(data==null){
+          window.alert('Group exists. Try different name');
+        }else{
+          this.getGroups();
+          return false;
+        }
       },
       error => {
         console.error(error);
@@ -152,11 +156,16 @@ export class GroupComponent implements OnInit {
     };
     this._userService.createUser(user).subscribe(
       data => {
+        if(data==null){
+          window.alert('User exists. Try a different name');
+          return false;
+        }else{
         this.getUsers();
         return true;
+        }
       },
       error => {
-        console.error(error);
+        console.error('Error creating users');
       }
     );
   }

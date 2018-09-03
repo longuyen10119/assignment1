@@ -18,17 +18,25 @@ module.exports = (app, fs) => {
     // Add User via post
     app.post('/api/user', (req, res) => {
         console.log('New User');
-        let id = 1;
-        if (obj.users.length > 0) {
-            let maximum = Math.max.apply(Math, obj.users.map(function (f) { return f.id; }));
-            id = maximum + 1;
+        // req.body.name is the username coming through
+        // have to check if it exists in database
+        let tempuser = obj.users.find(x => x.name==req.body.name)
+        if (typeof tempuser == "undefined"){
+            let id = 1;
+            if (obj.users.length > 0) {
+                let maximum = Math.max.apply(Math, obj.users.map(function (f) { return f.id; }));
+                id = maximum + 1;
+            }
+
+            let newUser = {"id": id, "name": req.body.name, "type": "normal"};
+            obj.users.push(newUser);
+            res.send(newUser);
+            fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
+                if (err) throw err;
+            })
+        }else{
+            res.send(null);
         }
-        let newUser = {"id": id, "name": req.body.name, "type": "normal"};
-        obj.users.push(newUser);
-        res.send(newUser);
-        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
-            if (err) throw err;
-        })
     });
 
     // Update users
