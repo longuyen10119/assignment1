@@ -8,9 +8,14 @@ import {Router} from "@angular/router";
 export class ChatroomComponent implements OnInit {
 
   constructor(private router:Router) { }
-
+  public usertype;
+  public usertypestring;
+  public displayName;
+  chooseusertype: String;
+  currentGroup: String;
+  currentChannel: String;
   ngOnInit() {
-    if(sessionStorage.length == 0){
+    if(localStorage.length == 0){
       window.alert('Havent logged in');
       this.router.navigateByUrl('/login');
     }

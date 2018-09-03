@@ -1,26 +1,12 @@
 <div class="card bg-info mb-3">
   <legend><h3>Hello, {{displayName}}</h3></legend>
   <h4>You are {{usertypestring}} user</h4>
+  <h4>You are in {{currentGroup}} Group</h4>
 </div>
-
 <div class="container">
   <div class="row">
-      <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
-          <div *ngIf="usertype==1 || usertype==2" class="card-header">List of Users</div>
-          <div class="card-body">
-            <tr *ngFor="let user of users">
-              <td>
-                {{user.name}} - {{user.type}}
-              </td>
-              <td *ngIf="usertype==1">
-                <button *ngIf="user.type!='super'" (click)="deleteUser(user); show=false" class="btn btn-xs btn-warning">Delete</button>
-              </td>
-            </tr>
-          </div>
-        </div>
-        <div></div>
     <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
-      <div class="card-header">Groups</div>
+      <div class="card-header">Channels list in {{currentGroup}}</div>
       <div class="card-body">
         <tr *ngFor="let group of groups">
           <td>
@@ -56,38 +42,22 @@
     <div  class="row">
         <div  class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
             <div *ngIf="usertype==1" class="form-group">
-              <label for="groupname">Enter User Name to Add</label>
-              <input [(ngModel)]="addusername"  type="text" placeholder="Username" class="form-control">
+              <label for="groupname">Enter Channel Name to Add</label>
+              <input [(ngModel)]="addusername"  type="text" placeholder="Channel Name" class="form-control">
               <!-- <input [(ngModel)]="groupadmin" type="text" placeholder="Group Admin" class="form-control"> -->
               <button type="submit" (click)="createUser(addusername)" class="btn btn-primary">Add</button>
             </div>
         </div>
         <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
               <div *ngIf="usertype==1" class="form-group">
-                <label for="groupname">Enter Group Name to Add</label>
-                <input [(ngModel)]="groupname"  type="text" placeholder="Group Name" class="form-control">
-                <label for="example1">Choose Group Admin</label>
+                <!-- <label for="groupname">Choose User Name to Add</label>
+                <input [(ngModel)]="groupname"  type="text" placeholder="Group Name" class="form-control"> -->
+                <label for="example1">Choose User to Add</label>
                       <select [(ngModel)]="groupadminchosen" class="form-control" id="selectgroupadmin">
                         <option *ngFor="let user of users"><ng-container *ngIf="user.type!='super' && user.type!='admin'">{{user.name}}</ng-container></option>
                       </select>
                 <button type="submit" (click)="createGroup(groupname, groupadminchosen); show=false" class="btn btn-primary">Add</button>
               </div>
-        </div>
-        <div *ngIf="show" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
-            <!-- <fieldset> -->
-              <div *ngIf="usertype==1 || usertype==2" class="form-group">
-                <label for="groupname">Choose User to Add to Group</label>
-                      <select [(ngModel)]="userchosen" class="form-control" id="selectuser">
-                        <option *ngFor="let user of users"><ng-container *ngIf="user.type!='super' && user.type!='admin'">{{user.name}}</ng-container></option>
-                      </select>
-                <label for="example2">Assign Role</label>
-                      <select [(ngModel)]="chooseusertype" class="form-control" id="Selectusertype">
-                        <option *ngIf="usertype==1">groupadmin</option>
-                        <option>normal</option>
-                      </select>
-                      <button type="submit" (click)="addAUserToGroup(userchosen, chooseusertype)" class="btn btn-primary">Add</button>
-              </div>
-            <!-- </fieldset> -->
         </div>
     </div>
 </div>

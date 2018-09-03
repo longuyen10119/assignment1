@@ -30,14 +30,14 @@ export class GroupComponent implements OnInit {
 
   ngOnInit() {
     //when group component is loading
-    // check for sessionStorage if any user has logged in
+    // check for localStorage if any user has logged in
     // if not then route back to log in
-    if(sessionStorage.length == 0){
+    if(localStorage.length == 0){
       window.alert('Havent logged in');
       this.router.navigateByUrl('/login');
-    }else{// also when loading check user in sessionStorage if user is normal, admin or super
-      this.displayName = sessionStorage.getItem('user');
-      this.usertypestring = sessionStorage.getItem('usertype');
+    }else{// also when loading check user in localStorage if user is normal, admin or super
+      this.displayName = localStorage.getItem('user');
+      this.usertypestring = localStorage.getItem('usertype');
       switch(this.usertypestring){
         case 'super':
           this.usertype = 1;
@@ -80,13 +80,17 @@ export class GroupComponent implements OnInit {
     console.log('hello getUsersInGroup in component');
     console.log(group.name);
     this.currentgroup = group;
+    // set Local Storage for current group name
+    localStorage.setItem('group', this.currentgroup.name);
     this._groupService.getUsersInGroup(group).subscribe(
       data => { this.usersInGroup = data;
                 console.log(data)},
       err => console.log('Get users in Group Error'),
-      () => console.log('Done get users in group')
+      () => {console.log('Done get users in group'),
+            console.log(this.usersInGroup)}
     );
-    console.log(this.usersInGroup);
+    // console.log(this.usersInGroup);
+    console.log(localStorage.getItem('group'));
   }
   getGroups() {
     this._groupService.getGroups().subscribe(
@@ -114,17 +118,6 @@ export class GroupComponent implements OnInit {
       }
     );
   }
-  updateGroup(group) {
-    this._groupService.updateGroup(group).subscribe(
-      data => {
-        this.getGroups();
-        return true;
-      },
-      error => {
-        console.error('Error saving group');
-      }
-    );
-  }
   // DELETE GROUP
   deleteGroup(group) {
     this._groupService.deleteGroup(group).subscribe(
@@ -146,7 +139,8 @@ export class GroupComponent implements OnInit {
   getUsers() {
     console.log('getUsers is being called in components');
     this._userService.getUsers().subscribe(
-      data => { this.users = data; },
+      data => { this.users = data; 
+                console.log(data)},
       err => console.error(err),
       () => console.log('done loading users')
     );

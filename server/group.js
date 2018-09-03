@@ -2,15 +2,15 @@ module.exports = (app, fs) => {
 
     let obj;
 
-    // returns a list of all users
+    // returns a the data 
     fs.readFile('data.JSON', 'utf-8', (err, data) => { if (err) {
             console.log(err);
         } else {
             obj = JSON.parse(data);
         }
     });
-    console.log("Group");
-    console.log(obj)
+    // console.log("Group");
+    // console.log(obj)
 
     // Get Groups via get
     app.get('/api/groups', (req, res) => {

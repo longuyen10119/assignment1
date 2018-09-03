@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   constructor(private router:Router,private form:FormsModule, private _loginService: LoginService) { }
 
   ngOnInit() {
-    if(sessionStorage.length!=0){
+    if(localStorage.length!=0){
       window.alert('You are still logged in. Please log out first');
       this.router.navigateByUrl('/group');
     }
@@ -32,8 +32,8 @@ export class LoginComponent implements OnInit {
                 if(this.returnUser == null){
                   window.alert("User not found");
                 }else{
-                  sessionStorage.setItem('user', this.returnUser.name);
-                  sessionStorage.setItem('usertype', this.returnUser.type);
+                  localStorage.setItem('user', this.returnUser.name);
+                  localStorage.setItem('usertype', this.returnUser.type);
                   this.router.navigateByUrl('/group');
                 }
               }

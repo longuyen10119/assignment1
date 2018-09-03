@@ -30,17 +30,12 @@ export class GroupService {
     let body = JSON.stringify(group);
     return this.http.post('http://localhost:3000/api/group/', body, httpOptions);
   }
-  //update currently is not being used
-  updateGroup(group) {
-    let body = JSON.stringify(group);
-    return this.http.put('http://localhost:3000/api/group/' + group.groupname, body, httpOptions);
-  }
   deleteGroup(group) {
     return this.http.delete('http://localhost:3000/api/group/' + group.name);
   }
-  getUsers() {
-    return this.http.get('http://localhost:3000/api/users');
-  }
+  // getUsers() {
+  //   return this.http.get('http://localhost:3000/api/users');
+  // }
   
 }
 

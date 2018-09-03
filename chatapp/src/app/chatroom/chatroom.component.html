@@ -1,3 +1,9 @@
+<div class="card bg-info mb-3">
+  <legend><h3>Hello, {{displayName}}</h3></legend>
+  <h4>You are {{usertypestring}} user</h4>
+  <h4>You are in {{currentGroup}} Group</h4>
+  <h4>You are in {{currentChannel}} Channel</h4>
+</div>
 
   <div id="chat_history" style="overflow-y: scroll; height: 300px">
     <div *ngFor="let message of messages">
