@@ -92,6 +92,7 @@ export class GroupComponent implements OnInit {
     this.currentgroup = group;
     // set Local Storage for current group name
     localStorage.setItem('group', this.currentgroup.name);
+    console.log(this.currentgroup);
     this._groupService.getUsersInGroup(group).subscribe(
       data => { this.usersInGroup = data;
                 console.log(data)},

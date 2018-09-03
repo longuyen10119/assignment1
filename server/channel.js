@@ -76,22 +76,76 @@ module.exports = (app, fs) => {
     // getUsersInChannel
     app.post('/api/channel/users', (req, res) =>{
         //need to send back a list of users
-        let listOfUsers = [];
+        let listOfUsers = []; /// 
         for(let i =0; i<req.body.users.length;i++){
             let userid = req.body.users[i];
-            let temp = obj.users.filter(x => x.id ==userid);
+            let index = obj.users.findIndex(x => x.id==userid);
+            let temp = {id: obj.users[index].id, name: obj.users[index].name, type: obj.users[index].type};
             listOfUsers.push(temp);
         }
-        console.log(listOfUsers)
         res.send(listOfUsers);
     });
     // addUserToChannel
     app.post('/api/channel/adduser', (req, res) =>{
+        // let temp = {user: name, channel: this.currentChannel.name, groupname: this.currentGroup};
+        let usern = req.body.user;
+        let channelname = req.body.user;
+        let groupname = req.body.groupname;
+
+        // find group index
+        let indextempGroup = obj.groups.findIndex(x => x.name==groupname);
+        //if user doesn't exist 
+        let tempUser = obj.users.find(x => x.name==usern);
+        if(typeof tempUser =="undefined"){// if user doesn't exit 
+            // make new user
+            let id = 1;
+            if (obj.users.length > 0) {
+                let maximum = Math.max.apply(Math, obj.users.map(function (f) { return f.id; }));
+                id = maximum + 1;
+            }
+            let newUser = {"id": id, "name": req.body.name, "type": "normal"};
+            obj.users.push(newUser);
+            
+            // add user id to the group
+            obj.groups[indextempGroup].users.push(id);
+            // add user to channel
+            // find channel index
+            let channelindex = obj.channels.findIndex(x => x.name==channelname && x.groupid == obj.groups[indextempGroup].id);
+            obj.channels[channelindex].users.push(id);
+        }else{
+            // if users exists in users, find user
+            // need to add user to current group if not already in there
+            let channelUser = obj.groups[indextempGroup].users.find(x =>x ==tempUser.id);
+            
+            if(typeof channelUser =='undefined'){ //if not exist in the current group
+                obj.groups[indextempGroup].users.push(tempUser.id);
+            }
+            // add user the channel
+            let channelindex = obj.channels.findIndex(x => x.name==channelname && x.groupid == obj.groups[indextempGroup].id);
+            obj.channels[channelindex].users.push(tempUser.id);
+        }
+        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
+            if (err) throw err;
+        })
+        res.send(req.body);
 
     });
     // deleteUserFromChannel
-    app.delete('/api/channel/deleteuser', (req, res) =>{
-        
+    app.post('/api/channel/deleteuser', (req, res) =>{
+        // let temp = {user: user.id, channel: this.currentChannel.name, groupname: this.currentGroup};
+        let userid = req.body.user;
+        let channelName = req.body.channel;
+        let groupName = req.body.groupname;
+        // find group id
+        let group = obj.groups.find(x => x.name==groupName);
+        let index = obj.channels.findIndex(x => x.name==channelName && x.groupid==group.id);
+        console.log(obj.channels[index]);
+        obj.channels[index].users = obj.channels[index].users.filter(x => x!=userid);
+        console.log(obj.channels[index]);
+        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
+            if (err) throw err;
+        })
+        res.send(group);
     });
    
    

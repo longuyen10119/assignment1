@@ -22,20 +22,19 @@
       </div>
     </div>
     <div *ngIf="show==true && (usertype==1 || usertype==2)" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
-        <div class="card-header">Users in Channel</div>
+        <div class="card-header">Users in {{currentChannel.name}}  Channel</div>
         <div ng- class="card-body">
-          <tr *ngFor="let user of usersInChannel">
+          <tr *ngFor="let u of usersInChannel">
             <td>
-              {{user.name}}
+              {{u.name}}
             </td>
             <td *ngIf="usertype!=3">
-              <button (click)="deleteUserFromChannel(user)" class="btn btn-xs btn-warning">Remove</button>
+              <button (click)="deleteUserFromChannel(u)" class="btn btn-xs btn-warning">Remove</button>
             </td>
           </tr>
-            <button class="btn btn-secondary btn-lg btn-block text-truncate mt-auto" routerLink="/channel" class="btn btn-xs btn-primary">Go to Channels of {{currentgroup.name}}</button>
+            <button class="btn btn-secondary btn-lg btn-block text-truncate mt-auto" routerLink="/chatroom" class="btn btn-xs btn-primary">Go to Chatroom of {{currentChannel.name}}</button>
         </div>
       </div>
-      
   </div>
 </div>
 <div class="container">
@@ -48,15 +47,13 @@
               <button type="submit" (click)="createChannel(addchannelname)" class="btn btn-primary">Add</button>
             </div>
         </div>
-        <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+        <div *ngIf="show" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
               <div *ngIf="usertype==1" class="form-group">
                 <!-- <label for="groupname">Choose User Name to Add</label>
                 <input [(ngModel)]="groupname"  type="text" placeholder="Group Name" class="form-control"> -->
-                <label for="example1">Choose User to Add</label>
-                      <select [(ngModel)]="groupadminchosen" class="form-control" id="selectgroupadmin">
-                        <option *ngFor="let user of users"><ng-container *ngIf="user.type!='super' && user.type!='admin'">{{user.name}}</ng-container></option>
-                      </select>
-                <button type="submit" (click)="createGroup(groupname, groupadminchosen); show=false" class="btn btn-primary">Add</button>
+                <label for="example1">Enter User name to Add</label>
+                <input [(ngModel)]="addusertochannel"  type="text" placeholder="Channel Name" class="form-control">
+                <button type="submit" (click)="addUserToChannel(addusertochannel)" class="btn btn-primary">Add</button>
               </div>
         </div>
     </div>

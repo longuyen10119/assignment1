@@ -96,7 +96,6 @@ export class ChannelComponent implements OnInit {
       this.currentChannel = channel;
       console.log(this.currentChannel);
       localStorage.setItem('channel', this.currentChannel.name);
-      console.log(localStorage.getItem('channel'));
       this._channelService.getUsersInChannel(channel).subscribe(
         data => {
           console.log(data);
@@ -105,13 +104,33 @@ export class ChannelComponent implements OnInit {
         },
         error => {
           console.error('Error getting all users in channel');
-        }
+        },
+        () => {console.log(this.usersInChannel);}
+      );
+      
+    }
+    addUserToChannel(name){
+      let temp = {user: name, channel: this.currentChannel.name, groupname: this.currentGroup};
+      this._channelService.addUserToChannel(temp).subscribe(
+        data => {
+          console.log(data);
+          return true;
+        },
+        error => {
+          console.error('Error getting all users in channel');
+        },
+        () => {console.log(this.usersInChannel);}
       );
     }
-    addUserToChannel(){
-
-    }
-    deleteUserFromChannel(){
-
+    deleteUserFromChannel(user){
+      // just need user id and channel id and group id
+      let temp = {user: user.id, channel: this.currentChannel.name, groupname: this.currentGroup};
+      this._channelService.deleteUserFromChannel(temp).subscribe(
+        data => {},
+        err => console.log('Error removing this user to the channel'),
+        () => {this.getUsersInChannel(this.currentChannel);
+               console.log(this.usersInChannel)  ;
+                 }
+      );
     }
 }

@@ -27,13 +27,13 @@ export class ChannelService {
     let body = JSON.stringify(channel);
     return this.http.post('http://localhost:3000/api/channel/users/', body, httpOptions);
   }
-  addUserToChannel(channel,user) {
-    let body = JSON.stringify(user);
-    return this.http.post('http://localhost:3000/api/channel/adduser/' + channel.id, body, httpOptions);
+  addUserToChannel(temp) {
+    let body = JSON.stringify(temp);
+    return this.http.post('http://localhost:3000/api/channel/adduser/', body, httpOptions);
   }
-  deleteUserFromChannel(channel, user) {
-    let body = JSON.stringify(user);
-    return this.http.post('http://localhost:3000/api/channel/deleteuser/' + channel.id, body, httpOptions);
+  deleteUserFromChannel(temp) {
+    let body = JSON.stringify(temp);
+    return this.http.post('http://localhost:3000/api/channel/deleteuser/', body, httpOptions);
   }
   
   
