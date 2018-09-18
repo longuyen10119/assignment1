@@ -1,7 +1,6 @@
 module.exports = (app, fs) => {
 
     let obj;
-
     // returns a the data 
     fs.readFile('data.JSON', 'utf-8', (err, data) => { if (err) {
             console.log(err);
@@ -9,7 +8,6 @@ module.exports = (app, fs) => {
             obj = JSON.parse(data);
         }
     });
-
     // List of services-----------
     // getChannels
     // createChannel

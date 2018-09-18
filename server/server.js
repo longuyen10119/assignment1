@@ -52,6 +52,8 @@ let dataNew = {
 fs.writeFile('data.JSON', JSON.stringify(dataNew), 'utf8',  (err) =>{
   if (err) throw err;
 })
+
+
 require('./user.js')(app,fs);
 require('./group.js')(app,fs);
 require('./login.js')(app,fs);
