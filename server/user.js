@@ -1,18 +1,14 @@
-module.exports = (app, fs) => {
-    let obj;
-    //read data.JSON file, pass the data into obj
-    fs.readFile('data.JSON', 'utf-8', (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            obj = JSON.parse(data);
-        }
-    });
-
-    // Get User via get
+module.exports = (app, db) => {
+    const assert = require('assert');
+    // Get Users via get
     app.get('/api/users', (req, res) => {
-        console.log('get users on server');
-        res.send(obj.users);
+        const collection = db.collection('users');
+        collection.find({}, {projection:{'_id':0}}).toArray(function(err, docs) {
+            assert.equal(err, null);
+            console.log("Found the following records");
+            console.log(docs);
+            res.send(docs)
+        });
     });
 
     // Add User via post

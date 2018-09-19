@@ -102,7 +102,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
 
     // Passing app and db connection into the required file
     require('./auth.js')(app,db);
-    // require('./user.js')(app,db);
+    require('./user.js')(app,db);
     // require('./group.js')(app,db);
     // require('./login.js')(app,db);
     // require('./channel.js')(app,db);
