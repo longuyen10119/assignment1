@@ -12,27 +12,30 @@ module.exports = (app, db) => {
     });
 
     // Add User via post
-    app.post('/api/user', (req, res) => {
-        console.log('New User');
-        // req.body.name is the username coming through
-        // have to check if it exists in database
-        let tempuser = obj.users.find(x => x.name==req.body.name)
-        if (typeof tempuser == "undefined"){
-            let id = 1;
-            if (obj.users.length > 0) {
-                let maximum = Math.max.apply(Math, obj.users.map(function (f) { return f.id; }));
-                id = maximum + 1;
-            }
-
-            let newUser = {"id": id, "name": req.body.name, "type": "normal"};
-            obj.users.push(newUser);
-            res.send(newUser);
-            fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
-                if (err) throw err;
-            })
-        }else{
-            res.send(null);
-        }
+    app.post('/api/user/add/:name', (req, res) => {
+        // Let's just send a name through
+        const collection = db.collection('users');
+        let name = req.params.name;
+        console.log(name);
+        // How to add???
+        // Find a way to get to the lastest added item 
+        // findOne({}, {sort:{$natural:-1}})
+        collection.findOne({},{sort:{$natural:-1},projection:{_id:0,pass:0,type:0}} ,function(err, result) { // find the last item
+            assert.equal(err, null);
+            console.log("Found the last one");
+            let newid = result.id +1;
+            let querry = {id:newid, name:name, pass:'123', type:'normal'};
+            collection.insertOne(querry, (err,result)=>{
+                assert.equal(err,null);
+                console.log("ADd succesful");
+                collection.find({}, {projection:{_id:0}}).toArray(function(err, result) {
+                    assert.equal(err, null);
+                    console.log("Return new");
+                    res.send(result);
+                });
+            });
+            
+        });
     });
 
     // Update users
