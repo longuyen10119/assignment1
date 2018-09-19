@@ -1,5 +1,6 @@
 module.exports = (app, db) => {
     const assert = require('assert');
+    
     // Get Users via get
     app.get('/api/users', (req, res) => {
         const collection = db.collection('users');
@@ -12,7 +13,7 @@ module.exports = (app, db) => {
     });
 
     // Add User via post
-    app.post('/api/user/add/:name', (req, res) => {
+    app.post('/api/user/:name', (req, res) => {
         // Let's just send a name through
         const collection = db.collection('users');
         let name = req.params.name;
@@ -28,11 +29,7 @@ module.exports = (app, db) => {
             collection.insertOne(querry, (err,result)=>{
                 assert.equal(err,null);
                 console.log("ADd succesful");
-                collection.find({}, {projection:{_id:0}}).toArray(function(err, result) {
-                    assert.equal(err, null);
-                    console.log("Return new");
-                    res.send(result);
-                });
+                res.send({name:name, success:true})
             });
             
         });
@@ -55,29 +52,34 @@ module.exports = (app, db) => {
         res.send(obj.users[index]);
     });
 
-    app.delete('/api/user/:username', function (req, res) {
-        console.log('delete user');
-        let usern = req.params.username;
-        console.log(usern);
-        let tempuser = obj.users.find(x => x.name ==usern);
-        let id = tempuser.id;
-        obj.users = obj.users.filter(x => x.name != usern);
-        
-        for(let i =0;i< obj.groups.length;i++){
-            if(obj.groups[i].groupAdmin == id){
-                obj.groups[i].groupAdmin = 0;
-            }
-            let newindex = obj.groups[i].users.findIndex(x => x==id);
-            obj.groups[i].users.splice(newindex,1);
-        }
-        //now gotta find if the user is in any group and then delete
-        // first find user ID of this current user
-        
-        
-        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
-            if (err) throw err;
-        })
-        res.send(obj.users);
+    app.delete('/api/user/:name', function (req, res) {
+        // When Deleting a User, also check for the users in groups and channels
+
+        // Lets just do users collection for now
+        const usercollection = db.collection('users');
+        const groupcollection = db.collection('groups');
+        const channelcollection = db.collection('channels');
+        let name = req.params.name;
+        let querry = {name:name}
+        console.log('deleting' + querry);
+        // Find the users to get id
+        // if found in any group delete
+        // if found in any channel delete
+        // delete that user from user collection 
+
+        usercollection.findOne(querry)
+            .then(reponse =>{
+
+            })
+
+
+        usercollection.deleteOne(querry,function(err, result) {
+        assert.equal(err, null);
+        console.log("Deleted");
+        // console.log(result);
+        res.send(result);
+        });
+
     });
 
 
