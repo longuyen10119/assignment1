@@ -65,9 +65,9 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
         console.log(count);
         if(count===0){
             groupcollection.insertMany([
-                {id:1, name:'Griffith', users: [1,2]},
-                {id:2, name:'BCS', users: [2,3]},
-                {id:3, name:'BA', users: [1,3]}
+                {id:1, name:'Griffith', groupAdmin: 1, users: [1,2]},
+                {id:2, name:'BCS',groupAdmin: 2, users: [2,3]},
+                {id:3, name:'BA',groupAdmin: 1, users: [1,3]}
             ], function(err, result) {
                 assert.equal(err, null);
                 assert.equal(3, result.result.n);
@@ -103,7 +103,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
     // Passing app and db connection into the required file
     require('./auth.js')(app,db);
     require('./user.js')(app,db);
-    // require('./group.js')(app,db);
+    require('./group.js')(app,db);
     // require('./login.js')(app,db);
     // require('./channel.js')(app,db);
 

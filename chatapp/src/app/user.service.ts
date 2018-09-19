@@ -24,10 +24,9 @@ export class UserService {
     let body = JSON.stringify(user);
     return this.http.post('http://localhost:3000/api/user/', body, httpOptions);
   }
-  //update currently is not being used
   updateUser(user) {
     let body = JSON.stringify(user);
-    return this.http.put('http://localhost:3000/api/user/' + user.id, body, httpOptions);
+    return this.http.put('http://localhost:3000/api/user/' , body, httpOptions);
   }
   deleteUser(user) {
     return this.http.delete('http://localhost:3000/api/user/' + user.name);

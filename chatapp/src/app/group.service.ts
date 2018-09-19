@@ -38,6 +38,10 @@ export class GroupService {
   deleteGroup(group) {
     return this.http.delete('http://localhost:3000/api/group/' + group.name);
   }
+  updateGroup(group) {
+    let body = JSON.stringify(group);
+    return this.http.put('http://localhost:3000/api/group/' , body, httpOptions);
+  }
   // getUsers() {
   //   return this.http.get('http://localhost:3000/api/users');
   // }

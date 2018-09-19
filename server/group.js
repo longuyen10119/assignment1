@@ -1,21 +1,16 @@
-module.exports = (app, fs) => {
+module.exports = (app, db) => {
+    const assert = require('assert');
 
-    let obj;
-
-    // returns a the data 
-    fs.readFile('data.JSON', 'utf-8', (err, data) => { if (err) {
-            console.log(err);
-        } else {
-            obj = JSON.parse(data);
-        }
-    });
-    // console.log("Group");
-    // console.log(obj)
 
     // Get Groups via get
     app.get('/api/groups', (req, res) => {
-        console.log('Getting groups')
-        res.send(obj.groups);
+        const collection = db.collection('groups');
+        collection.find({}, {projection:{'_id':0}}).toArray(function(err, docs) {
+            assert.equal(err, null);
+            console.log("Found the following groups");
+            console.log(docs);
+            res.send(docs)
+        });
     });
     // Return users in the group
     app.post('/api/group/users', (req, res) => {
@@ -69,61 +64,46 @@ module.exports = (app, fs) => {
     
     // Add group via post
     app.post('/api/group', (req, res) => {
-        //Getting a group obj with name, groupadmin, and empty list of users
-        // req.body obj
-        // create a newgroup: 4 things id from func, groupname from req.body.nam, groupadmin id from obj.users, emptylist of users
-        // also need to update user to groupadmin if isn't already
-        
-        // pick a unique group id
-        let tempgroup = obj.groups.find(x => x.name==req.body.name);
-        if(typeof tempgroup == "undefined"){
-            let id = 1;
-            if (obj.groups.length > 0) {
-                let maximum = Math.max.apply(Math, obj.groups.map(function (f) { return f.id; }));
-                id = maximum + 1;
-            }
-            // find the groupadmin id and update the user to group admin
-            let index = obj.users.findIndex(x => x.name==req.body.groupAdmin);
-            let newGroup = {id: id,
-                            name: req.body.name,
-                            groupAdmin: obj.users[index].id,
-                            users: [obj.users[index].id]}
-            // currenlty not being able to change type for stupid reason
-            obj.users[index].type = 'groupadmin';
-            // sol 1 remove the user then add a new one
-
-            let newUser = {id: obj.users[index].id, name: obj.users[index].name, type: 'groupadmin'}
-            obj.users.push(newUser);
-            obj.groups.push(newGroup);
+        const collection = db.collection('groups');
+        console.log(req.body);
+        collection.findOne({},{sort:{$natural:-1},projection:{_id:0}} ,function(err, result) { // find the last item
+            assert.equal(err, null);
+            let newid = result.id +1;
+            let query = {id:newid, name:req.body.name, groupAdmin:req.body.groupAdmin, users: req.body.users}
+            collection.insertOne(query, (err,result)=>{
+                assert.equal(err,null);
+                console.log("ADd succesful");
+                res.send({success:true})
+            });
             
-            fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
-                if (err) throw err;
-            })
-            res.send(newGroup);
-        }else{
-            res.send(null);
-        }
+        });
     });
     
-    // Update groups via put (not working because cant id which record to change... add id to groups)
-    app.put('/api/group/:name', function (req, res) {
-        console.log('update group');
-        let g = obj.groups.find(x => x.name == name);
-        g.name = req.body.name;
-        res.send(g);
+    // Update groups via put 
+    app.put('/api/group/', function (req, res) {
+        let newGroup = req.body
+        console.log(newGroup)
+        const collection = db.collection('groups');
+        collection.deleteOne({name:newGroup.name}, (err,result)=>{
+            assert.equal(err,null);
+            collection.insertOne(newGroup, (err,result)=>{
+                assert.equal(err,null);
+                res.send({success:true})
+            });
+        });
     });
     // DELETE GROUP
     app.delete('/api/group/:name', function (req, res) {
-        console.log('delete group');
-        let groupn = req.params.name;
-        console.log(groupn);
-        // let g = students.find(x => x.id == id);
-        obj.groups = obj.groups.filter(x => x.name != groupn);
-        res.send(obj.groups);
-        console.log(obj.groups);
-        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
-            if (err) throw err;
-        })
+        let query = {name:req.params.name};
+        const groupcollection = db.collection('groups');
+        groupcollection.deleteOne(query,function(err, result) {
+            assert.equal(err, null);
+            console.log("Deleted");
+            // console.log(result);
+            res.send(result);
+        });
+
+        
     });
 
 

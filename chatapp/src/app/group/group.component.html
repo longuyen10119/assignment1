@@ -55,15 +55,8 @@
             <!-- <fieldset> -->
               <div *ngIf="usertype==1 || usertype==2" class="form-group">
                 <label for="groupname">Choose User to Add to Group</label>
-                      <select [(ngModel)]="userchosen" class="form-control" id="selectuser">
-                        <option *ngFor="let user of users"><ng-container *ngIf="user.type!='super' && user.type!='admin'">{{user.name}}</ng-container></option>
-                      </select>
-                <label for="example2">Assign Role</label>
-                      <select [(ngModel)]="chooseusertype" class="form-control" id="Selectusertype">
-                        <option *ngIf="usertype==1">groupadmin</option>
-                        <option>normal</option>
-                      </select>
-                      <button type="submit" (click)="addAUserToGroup(userchosen, chooseusertype)" class="btn btn-primary">Add</button>
+                      <input [(ngModel)]="username"  type="text" placeholder="User Name" class="form-control">
+                      <button type="submit" (click)="addAUserToGroup(username, chooseusertype)" class="btn btn-primary">Add</button>
               </div>
             <!-- </fieldset> -->
         </div>

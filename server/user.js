@@ -4,9 +4,9 @@ module.exports = (app, db) => {
     // Get Users via get
     app.get('/api/users', (req, res) => {
         const collection = db.collection('users');
-        collection.find({}, {projection:{'_id':0}}).toArray(function(err, docs) {
+        collection.find({}, {projection:{'_id':0,pass:0}}).toArray(function(err, docs) {
             assert.equal(err, null);
-            console.log("Found the following records");
+            console.log("Found the following users");
             console.log(docs);
             res.send(docs)
         });
@@ -14,7 +14,6 @@ module.exports = (app, db) => {
 
     // Add User via post
     app.post('/api/user/', (req, res) => {
-        // Let's just send a name through
         const collection = db.collection('users');
         console.log(req.body.name);
         let name = req.body.name;
@@ -30,27 +29,27 @@ module.exports = (app, db) => {
             collection.insertOne(querry, (err,result)=>{
                 assert.equal(err,null);
                 console.log("ADd succesful");
-                res.send({name:name, success:true})
+                collection.find({}, {projection:{'_id':0,pass:0}}).toArray(function(err, docs) {
+                    assert.equal(err, null);
+                    console.log("Found the following users");
+                    console.log(docs);
+                    res.send(docs)
+                });
             });
             
         });
     });
 
     // Update users
-    app.put('/api/group/:name', function (req, res) {
-        // console.log('update student');
-        // let id = req.params.id;
-        // let s = students.find(x => x.id == id);
-        // s.name = req.body.name;
-        // s.gpa = req.body.gpa;
-        // res.send(s);
-        console.log('update User');
-        let index = obj.users.findIndex(x => x.id = req.body.id);
-        obj.users[index].type = 'groupadmin';
-        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
+    app.put('/api/user/', function (req, res) {
+        const collection = db.collection('users');
+        var query = { name: req.body.name};
+        var newvalues = { $set: { type: req.body.type } };
+        collection.updateOne(query, newvalues, function(err, res) {
             if (err) throw err;
-        })
-        res.send(obj.users[index]);
+            console.log("1 document updated");
+          });
+        
     });
 
     app.delete('/api/user/:name', function (req, res) {
@@ -61,8 +60,8 @@ module.exports = (app, db) => {
         const groupcollection = db.collection('groups');
         const channelcollection = db.collection('channels');
         let name = req.params.name;
-        let querry = {name:name}
-        console.log('deleting' + querry);
+        let query = {name:name}
+        console.log('deleting' + query);
         // Find the users to get id
         // if found in any group delete
         // if found in any channel delete
@@ -78,7 +77,7 @@ module.exports = (app, db) => {
         //     )
 
 
-        usercollection.deleteOne(querry,function(err, result) {
+        usercollection.deleteOne(query,function(err, result) {
             assert.equal(err, null);
             console.log("Deleted");
             // console.log(result);

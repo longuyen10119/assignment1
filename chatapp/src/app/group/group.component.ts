@@ -59,49 +59,44 @@ export class GroupComponent implements OnInit {
   //Add users to Specific group
   addAUserToGroup(n, t){
     //n is name and t is type
-    console.log(n);
-    console.log(t);
-    // need to know which group to add users to
-    // what the username is, and role to add
-    // current group is in currentgroup
-    // username is in n, and role is in t
-    let userNameToAdd = n;
-    let roleToAdd = t;
-    let groupToAdd = this.currentgroup;
-    let temp = {name: n, type: t, group: groupToAdd}
-    this._groupService.addAUserToGroup(temp).subscribe(
-      data => {this.getUsersInGroup(this.currentgroup)},
-      err => console.log('Error adding this user to the group'),
-      () => console.log()
-    );
+    // if user exists
+    // get the user id, then add to users list in group
+    let founduser = this.users.find(x=> x.name==n);
+    if(typeof founduser !== 'undefined'){ // if user does exist in list
+      this.currentgroup.users.push(founduser.id);
+    }else{ // if user doesn't then need to add to list of users
+      this.createUser(n);
+      let id = this.users[this.users.length-1].id;
+      id += 1;
+      this.currentgroup.users.push(id);
+    }
+    //
+    this.getUsers();
+    this.updateGroup(this.currentgroup);
+    this.getUsersInGroup(this.currentgroup);
+    this.getGroups();
+
   }
   // Remove user from a group
   removeUserFromGroup(user){
-    //user need to be removed
-    let groupToRemove = this.currentgroup;
-    let temp = {id: user.id, group: groupToRemove}
-    this._groupService.removeUserFromGroup(temp).subscribe(
-      data => {this.getUsersInGroup(this.currentgroup)},
-      err => console.log('Error removing this user to the group'),
-      () => console.log()
-    );
+    let id = user.id
+    let index = this.currentgroup.users.findIndex(x=> x==id);
+    this.currentgroup.users.splice(index,1);
+    this.updateGroup(this.currentgroup);
+    this.getUsersInGroup(this.currentgroup);
+    this.getGroups();
   }
   getUsersInGroup(group){
-    console.log('hello getUsersInGroup in component');
-    console.log(group.name);
+    // set localStorage
     this.currentgroup = group;
-    // set Local Storage for current group name
-    localStorage.setItem('group', this.currentgroup.name);
-    console.log(this.currentgroup);
-    this._groupService.getUsersInGroup(group).subscribe(
-      data => { this.usersInGroup = data;
-                console.log(data)},
-      err => console.log('Get users in Group Error'),
-      () => {console.log('Done get users in group'),
-            console.log(this.usersInGroup)}
-    );
-    // console.log(this.usersInGroup);
-    console.log(localStorage.getItem('group'));
+    localStorage.setItem('group', group.name);
+    let groupusers = []
+    for(let i=0; i<group.users.length; i++){
+      let id = group.users[i]
+      let aUser = this.users.find(x=> x.id == id)
+      groupusers.push(aUser);
+    }
+    this.usersInGroup = groupusers;
   }
   getGroups() {
     this._groupService.getGroups().subscribe(
@@ -111,31 +106,52 @@ export class GroupComponent implements OnInit {
       () => console.log('done loading groups')
     );
   }
+
   // CREATE NEW GROUP
   createGroup(name, admin) {
-    console.log(name);
+    for(let i =0; i<this.groups.length; i++){
+      if(this.groups[i].name==name){
+        window.alert('Group exists. Try a different name');
+        return;
+      }
+    }
+    let adminUser = this.users.find(x=> x.name== admin);
+    adminUser.type = 'groupadmin';
+    console.log(adminUser);
+    this.updateUser(adminUser);
     let group = {
       'name' : name,
-      'groupAdmin': admin,
-      'users': []
+      'groupAdmin': adminUser.id,
+      'users': [adminUser.id]
     }
     this._groupService.createGroup(group).subscribe(
       data => {
-        if(data==null){
-          window.alert('Group exists. Try different name');
-          return false;
-        }else{
           this.getGroups();
+          this.getUsers();
           return true;
-        }
       },
       error => {
         console.error(error);
       }
     );
   }
+  // UPDATE GROUP
+  updateGroup(group) {
+    this._groupService.updateGroup(group).subscribe(
+      data => {
+        this.getGroups();
+        return true;
+      },
+      error => {
+        console.error('Error updating groups');
+      }
+    );
+  }
   // DELETE GROUP
   deleteGroup(group) {
+    let adminUser = this.users.find(x=> x.id== group.groupAdmin);
+    adminUser.type = 'normal';
+    this.updateUser(adminUser);
     this._groupService.deleteGroup(group).subscribe(
       data => {
         this.getGroups();
@@ -160,25 +176,36 @@ export class GroupComponent implements OnInit {
   }
   //Create new users
   createUser(name) {
+    // for(let i =0; i<this.users.length; i++){
+    //   if(this.users[i].name==name){
+    //     window.alert('User exists. Try a different name');
+    //     return;
+    //   }
+    // }
     let user = {
       name: name
     };
     this._userService.createUser(user).subscribe(
       data => {
-        if(data==null){
-          window.alert('User exists. Try a different name');
-          return false;
-        }else{
-        this.getUsers();
-        return true;
-        }
+        this.users = data;
       },
       error => {
         console.error('Error creating users');
       }
     );
   }
+  updateUser(user) {
+    this._userService.updateUser(user).subscribe(
+      data => {
+        this.getUsers()
+      },
+      error => {
+        console.error('Error updating user');
+      }
+    );
+  }
   //Delete Users
+
   deleteUser(user) {
     this._userService.deleteUser(user).subscribe(
       data => {
@@ -187,7 +214,9 @@ export class GroupComponent implements OnInit {
       },
       error => {
         console.error('Error deleting group');
-      }
+      },
+      ()=>{this.getUsers();}
+
     );
   }
 

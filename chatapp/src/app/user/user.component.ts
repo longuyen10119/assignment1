@@ -92,7 +92,7 @@ export class UserComponent implements OnInit {
         return true;
       },
       error => {
-        console.error('Error deleting group');
+        console.error('Error deleting user');
       }
     );
   }
