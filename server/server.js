@@ -15,13 +15,13 @@ var corsOptions = {
 
 /// Linking to serve the angular route//////////////////////
 app.use(cors(corsOptions))
-app.use(express.static(path.join(__dirname, '../chatapp/dist/chatapp')));
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname,'../chatapp/dist/chatapp/index.html'))
-});
-app.get('/students', function(req,res){
-    res.sendFile(path.join(__dirname,'../chatapp/dist/chatapp/index.html'))
-});
+// app.use(express.static(path.join(__dirname, '../chatapp/dist/chatapp')));
+// app.get('/', function (req, res) {
+//     res.sendFile(path.join(__dirname,'../chatapp/dist/chatapp/index.html'))
+// });
+// app.get('/students', function(req,res){
+//     res.sendFile(path.join(__dirname,'../chatapp/dist/chatapp/index.html'))
+// });
 //////////////////////////////////////////////////////
 const MongoClient = require('mongodb').MongoClient;
 //connection URL
@@ -31,43 +31,81 @@ const dbName = 'assignment2';
 const assert = require('assert'); 
 
 MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
-    let dataNew = {
-        "users":[
-            {id:1, name: "Long", type: "super"},
-            {id:2, name: "Nguyen", type: "groupadmin"},
-            {id:3, name: "Smith", type: "normal"},
-            {id:4, name: "Ben", type: "groupadmin"},
-            {id:5, name: "Jason", type: "normal"},
-            {id:6, name: "Thomas", type: "normal"},
-            {id:7, name: "Alex", type: "normal"}
-            ],
-        "groups":[
-            {id:1, name: "Griffith", groupAdmin: 2, users: [2,1]},
-            {id:2, name: "UQ", groupAdmin: 4, users: [4,2,6]},
-            {id:3, name: "Bond", groupAdmin: 3, users: [3,6]},
-            {id:4, name: "MIT", groupAdmin: 4, users: [4,6]},
-            {id:5, name: "HARVARD", groupAdmin: 5, users: [5,6
-            ]}
-            ],
-        "channels":[
-            {name: 'c1', groupid: 1, users: [5,6,7]},
-            {name: 'c2', groupid: 1, users: [5,6]},
-            {name: 'c3', groupid: 2, users: [3,6,7]},
-            {name: 'c4', groupid: 2, users: [4,6,7]},
-            {name: 'c5', groupid: 3, users: [3,6,7]},
-            {name: 'c6', groupid: 3 , users: [4,6,7]}
-            ]
-    }
+    if (err) {return console.log(err);}
+    console.log("Connected successfully to server");
 
-    fs.writeFile('data.JSON', JSON.stringify(dataNew), 'utf8',  (err) =>{
-    if (err) throw err;
-    })
+    const db = client.db(dbName);
+    ///// Let's try to create a sample database
+    // Find out if collection is empty
 
+    // USER COLLECTION
+    const usercollection = db.collection('users');
+    usercollection.countDocuments(function(err, count){
+        if (err) {return console.log(err);}
+        console.log(count);
+        if(count===0){
+            usercollection.insertMany([
+                {id:1, name:'Long', pass:'123', type:'super'},
+                {id:2, name:'super', pass:'123', type:'super'},
+                {id:3, name:'Smith', pass:'123', type:'normal'}
+            ], function(err, result) {
+                assert.equal(err, null);
+                assert.equal(3, result.result.n);
+                assert.equal(3, result.ops.length);
+                console.log("Inserted 3 users");
+            // callback(result);
+            });
+        }
+    });
 
-    require('./user.js')(app,fs);
-    require('./group.js')(app,fs);
-    require('./login.js')(app,fs);
-    require('./channel.js')(app,fs);
+    // GROUP COLLECTION
+    const groupcollection = db.collection('groups');
+    groupcollection.countDocuments(function(err, count){
+        if (err) {return console.log(err);}
+        console.log(count);
+        if(count===0){
+            groupcollection.insertMany([
+                {id:1, name:'Griffith', users: [1,2]},
+                {id:2, name:'BCS', users: [2,3]},
+                {id:3, name:'BA', users: [1,3]}
+            ], function(err, result) {
+                assert.equal(err, null);
+                assert.equal(3, result.result.n);
+                assert.equal(3, result.ops.length);
+                console.log("Inserted 3 groups");
+            // callback(result);
+            });
+        }
+    });
+
+    // CHANNEL COLLECTION
+    const channelcollection = db.collection('channels');
+    channelcollection.countDocuments(function(err, count){
+        if (err) {return console.log(err);}
+        console.log(count);
+        if(count===0){
+            channelcollection.insertMany([
+                {name: 'c1', groupid:1, users:[1,2]},
+                {name: 'c2', groupid:1, users:[1,2]},
+                {name: 'c3', groupid:2, users:[2,3]},
+                {name: 'c4', groupid:2, users:[2,3]},
+                {name: 'c5', groupid:2, users:[1,3]}
+            ], function(err, result) {
+                assert.equal(err, null);
+                assert.equal(5, result.result.n);
+                assert.equal(5, result.ops.length);
+                console.log("Inserted 5 channels");
+            // callback(result);
+            });
+        }
+    });
+
+    // Passing app and db connection into the required file
+    require('./auth.js')(app,db);
+    // require('./user.js')(app,db);
+    // require('./group.js')(app,db);
+    // require('./login.js')(app,db);
+    // require('./channel.js')(app,db);
 
     /// Open server on port 3000
     var port = 3000;
@@ -76,6 +114,6 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
     });
 
 
-}
+});
 
 
