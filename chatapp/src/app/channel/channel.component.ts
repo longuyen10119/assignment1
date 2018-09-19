@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import { ChannelService } from "../channel.service";
+import { UserService } from '../user.service';
+import { GroupService} from '../group.service';
 @Component({
   selector: 'app-channel',
   templateUrl: './channel.component.html',
@@ -8,26 +10,34 @@ import { ChannelService } from "../channel.service";
 })
 export class ChannelComponent implements OnInit {
 
-  constructor(private router:Router, private _channelService: ChannelService) { }
+  constructor(private router:Router, private _channelService: ChannelService,
+              private _userService: UserService,
+              private _groupService: GroupService) { }
   //1 being super, 2 being groupAdmin, 3 being normal
+  public users;
+  public groups;
   public usertype;
   public usertypestring;
   public displayName;
   public channels;
   public usersInChannel;
   chooseusertype: String;
-  currentGroup: String;
+  currentGroupName: String;
+  public currentGroup;
   public currentChannel;
 
   ngOnInit() {
     // If you haven't logged in
+    // console.log('HELLLLLlllllllllefjelifjelfjelfjelfejflejflelllll')
     if(localStorage.length == 0){
       window.alert('Havent logged in');
       this.router.navigateByUrl('/login');
     }else{// also when loading check user in localStorage if user is normal, admin or super
+      console.log('HELLLLLlllllllllefjelifjelfjelfjelfejflejflelllll')
       this.displayName = localStorage.getItem('user');
+      console.log(this.displayName);
       this.usertypestring = localStorage.getItem('usertype');
-      this.currentGroup = localStorage.getItem('group');
+      this.currentGroupName = localStorage.getItem('group');
       switch(this.usertypestring){
         case 'super':
           this.usertype = 1;
@@ -41,6 +51,8 @@ export class ChannelComponent implements OnInit {
         }
     }
     this.getChannels();
+    this.getUsers();
+    this.getGroups();
   }
     // List of Channel services-----------
     // getChannels
@@ -53,7 +65,12 @@ export class ChannelComponent implements OnInit {
 
     // get channels in current group
     getChannels() {
-      this._channelService.getChannels(this.currentGroup).subscribe(
+      console.log(this.groups);
+      console.log(localStorage.getItem('user'));
+      console.log(localStorage.getItem('usertype'));
+      console.log(localStorage.getItem('group'));
+      let foundgroup = this.groups.find(x =>x.name == this.currentGroupName)
+      this._channelService.getChannels(foundgroup.id).subscribe(
         data => { this.channels = data;
                   console.log(data) },
         err => console.error(err),
@@ -62,7 +79,7 @@ export class ChannelComponent implements OnInit {
     }
     // Create new channel within this group
     createChannel(channel){
-      let temp = {channel: channel, group: this.currentGroup};
+      let temp = {channel: channel, group: this.currentGroupName};
       this._channelService.createChannel(temp).subscribe(
         data => {
           if(data==null){
@@ -78,7 +95,7 @@ export class ChannelComponent implements OnInit {
       );
     }
     deleteChannel(channel){
-      let temp = {channel: channel.name, group: this.currentGroup};
+      let temp = {channel: channel.name, group: this.currentGroupName};
       console.log(temp);
       this._channelService.deleteChannel(temp).subscribe(
         data => {
@@ -110,7 +127,7 @@ export class ChannelComponent implements OnInit {
       
     }
     addUserToChannel(name){
-      let temp = {user: name, channel: this.currentChannel.name, groupname: this.currentGroup};
+      let temp = {user: name, channel: this.currentChannel.name, groupname: this.currentGroupName};
       this._channelService.addUserToChannel(temp).subscribe(
         data => {
           console.log(data);
@@ -124,7 +141,7 @@ export class ChannelComponent implements OnInit {
     }
     deleteUserFromChannel(user){
       // just need user id and channel id and group id
-      let temp = {user: user.id, channel: this.currentChannel.name, groupname: this.currentGroup};
+      let temp = {user: user.id, channel: this.currentChannel.name, groupname: this.currentGroupName};
       this._channelService.deleteUserFromChannel(temp).subscribe(
         data => {},
         err => console.log('Error removing this user to the channel'),
@@ -133,4 +150,56 @@ export class ChannelComponent implements OnInit {
                  }
       );
     }
+
+
+
+    //////////////////adding Some User Service here
+  getUsers() {
+    console.log('getUsers is being called in chat');
+    this._userService.getUsers().subscribe(
+      data => { this.users = data; 
+                console.log(data)},
+      err => console.error(err),
+      () => console.log('done loading users')
+    );
+  }
+  //Create new users
+  createUser(name) {
+    // for(let i =0; i<this.users.length; i++){
+    //   if(this.users[i].name==name){
+    //     window.alert('User exists. Try a different name');
+    //     return;
+    //   }
+    // }
+    let user = {
+      name: name
+    };
+    this._userService.createUser(user).subscribe(
+      data => {
+        this.users = data;
+      },
+      error => {
+        console.error('Error creating users');
+      }
+    );
+  }
+  updateUser(user) {
+    this._userService.updateUser(user).subscribe(
+      data => {
+        this.getUsers()
+      },
+      error => {
+        console.error('Error updating user');
+      }
+    );
+  }
+  ///////////////////////////////
+  getGroups() {
+    this._groupService.getGroups().subscribe(
+      data => { this.groups = data;
+                console.log(data) },
+      err => console.error(err),
+      () => console.log('done loading groups')
+    );
+  }
 }

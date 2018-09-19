@@ -10,9 +10,9 @@ const httpOptions = {
 export class ChannelService {
 
   constructor(private http: HttpClient) { }
-  getChannels(groupname) {
+  getChannels(groupid) {
     console.log('getusers is being called in service');
-    return this.http.get('http://localhost:3000/api/channels/' + groupname);
+    return this.http.get('http://localhost:3000/api/channels/' + groupid);
   }
   createChannel(temp) {
     let body = JSON.stringify(temp);

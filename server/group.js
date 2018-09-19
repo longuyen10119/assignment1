@@ -12,55 +12,6 @@ module.exports = (app, db) => {
             res.send(docs)
         });
     });
-    // Return users in the group
-    app.post('/api/group/users', (req, res) => {
-        //get the group name thru api
-        let gname = req.body.name;
-        console.log('Server side--------------')
-        console.log(gname);
-        // find the group with matching name then return it to g
-        let g = obj.groups.find(x => x.name == gname);
-        let users = [];
-        let newgroupuserlist = [];
-        for(let i=0; i<g.users.length;i++){
-            let gid = g.users[i];
-            //check if gid exists in user list
-            let name = obj.users.find(x => x.id == gid)
-            if(name != undefined){
-                newgroupuserlist.push(name.id);
-                users.push(name);
-            }
-        }
-        obj.groups.users = newgroupuserlist;
-        res.send(users);
-    });
-    // Add user to a group
-    app.post('/api/group/add', (req, res) =>{
-        console.log(req.body);
-        let name = req.body.name;
-        let type = req.body.type;
-        let groupToAdd = req.body.group;
-        let user = obj.users.find(x => x.name ==name);
-        let id = user.id;
-        let groupindex = obj.groups.findIndex(x => x.id == groupToAdd.id);
-        obj.groups[groupindex].users.push(id);
-        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
-            if (err) throw err;
-        })
-        res.send(obj.groups[groupindex]);
-    });
-    // Remove user from a group
-    app.post('/api/group/remove', (req, res) =>{
-        // coming thru object has user id and the group
-        let userid = req.body.id;
-        let groupindex = obj.groups.findIndex(x => x.id==req.body.group.id);
-        
-        obj.groups[groupindex].users = obj.groups[groupindex].users.filter(x => x!=userid);
-        fs.writeFile('data.json', JSON.stringify(obj), 'utf8', (err) =>{
-            if (err) throw err;
-        })
-        res.send(obj.groups[groupindex]);
-    });
     
     // Add group via post
     app.post('/api/group', (req, res) => {
