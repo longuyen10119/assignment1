@@ -13,10 +13,11 @@ module.exports = (app, db) => {
     });
 
     // Add User via post
-    app.post('/api/user/:name', (req, res) => {
+    app.post('/api/user/', (req, res) => {
         // Let's just send a name through
         const collection = db.collection('users');
-        let name = req.params.name;
+        console.log(req.body.name);
+        let name = req.body.name;
         console.log(name);
         // How to add???
         // Find a way to get to the lastest added item 
@@ -67,17 +68,21 @@ module.exports = (app, db) => {
         // if found in any channel delete
         // delete that user from user collection 
 
-        usercollection.findOne(querry)
-            .then(reponse =>{
+        // usercollection.findOne(querry)
+        //     .then(reponse =>{
+        //         let id = respond.id
+                
+        //     })
+        //     .then ( ()=> 
 
-            })
+        //     )
 
 
         usercollection.deleteOne(querry,function(err, result) {
-        assert.equal(err, null);
-        console.log("Deleted");
-        // console.log(result);
-        res.send(result);
+            assert.equal(err, null);
+            console.log("Deleted");
+            // console.log(result);
+            res.send(result);
         });
 
     });

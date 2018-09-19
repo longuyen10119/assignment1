@@ -11,7 +11,9 @@ module.exports = function(app, db){
         collection.find(querry).count( (err,count)=>{
             assert.equal(null,err);
             if (count>0){
-                res.send({name:name, success:true});
+                collection.findOne(querry, {projection:{_id:0, pass:0}}, (err,result)=>{
+                    res.send(result);
+                });
             }else{
                 res.send({name:'', success:false});
             }

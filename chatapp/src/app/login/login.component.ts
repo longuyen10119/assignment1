@@ -10,6 +10,7 @@ import { LoginService } from "../login.service";
 })
 export class LoginComponent implements OnInit {
   username:string = '';
+  pass:string = '';
   public returnUser;
   constructor(private router:Router,private form:FormsModule, private _loginService: LoginService) { }
 
@@ -22,15 +23,20 @@ export class LoginComponent implements OnInit {
 
   loginUser(event){
     event.preventDefault();
-    console.log(this.username);
+    let user = {
+      name:this.username,
+      pass:this.pass
+    }
 
-    this._loginService.checkLogin(this.username).subscribe(
-        data => { this.returnUser = data;},
+    this._loginService.checkLogin(user).subscribe(
+        data => { 
+          this.returnUser = data;
+        },
         err => console.error(err),
         () => {
-                console.log('done loading user');
-                if(this.returnUser == null){
-                  window.alert("User not found");
+                console.log(this.returnUser);
+                if(this.returnUser.name == ''){
+                  window.alert("Username or Password is wrong");
                 }else{
                   localStorage.setItem('user', this.returnUser.name);
                   localStorage.setItem('usertype', this.returnUser.type);

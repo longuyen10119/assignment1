@@ -15,13 +15,13 @@ var corsOptions = {
 
 /// Linking to serve the angular route//////////////////////
 app.use(cors(corsOptions))
-// app.use(express.static(path.join(__dirname, '../chatapp/dist/chatapp')));
-// app.get('/', function (req, res) {
-//     res.sendFile(path.join(__dirname,'../chatapp/dist/chatapp/index.html'))
-// });
-// app.get('/students', function(req,res){
-//     res.sendFile(path.join(__dirname,'../chatapp/dist/chatapp/index.html'))
-// });
+app.use(express.static(path.join(__dirname, '../chatapp/dist/chatapp')));
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname,'../chatapp/dist/chatapp/index.html'))
+});
+app.get('/students', function(req,res){
+    res.sendFile(path.join(__dirname,'../chatapp/dist/chatapp/index.html'))
+});
 //////////////////////////////////////////////////////
 const MongoClient = require('mongodb').MongoClient;
 //connection URL

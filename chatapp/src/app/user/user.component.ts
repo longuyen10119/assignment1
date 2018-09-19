@@ -60,6 +60,12 @@ export class UserComponent implements OnInit {
   }
   //Create new users
   createUser(name) {
+    for(let i =0; i<this.users.length; i++){
+      if(this.users[i].name==name){
+        window.alert('User exists. Try a different name');
+        return;
+      }
+    }
     let user = {
       name: name
     };

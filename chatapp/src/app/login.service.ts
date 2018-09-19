@@ -15,8 +15,8 @@ export class LoginService {
   getUsers() {
     return this.http.get('http://localhost:3000/api/users');
   }
-  checkLogin(username){
-    console.log(username);
-    return this.http.get('http://localhost:3000/api/login/' + username);
+  checkLogin(user){
+    let body = JSON.stringify(user)
+    return this.http.post('http://localhost:3000/api/auth/', body, httpOptions);
   }
 }
