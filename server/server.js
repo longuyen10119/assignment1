@@ -104,8 +104,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
     require('./auth.js')(app,db);
     require('./user.js')(app,db);
     require('./group.js')(app,db);
-    // require('./login.js')(app,db);
-    // require('./channel.js')(app,db);
+    require('./channel.js')(app,db);
 
     /// Open server on port 3000
     var port = 3000;

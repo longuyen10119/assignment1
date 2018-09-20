@@ -4,9 +4,9 @@ module.exports = (app, db) => {
 
     // Get Channels
     app.get('/api/channels/:id', (req, res) => {
-        let id = req.params.id;
+        let id = parseInt(req.params.id);
         const collection = db.collection('channels');
-        collection.find({id:id}, {projection:{'_id':0}}).toArray(function(err, docs) {
+        collection.find({groupid:id}, {projection:{'_id':0}}).toArray(function(err, docs) {
             assert.equal(err, null);
             console.log("Found the following channels");
             console.log(docs);
@@ -14,48 +14,44 @@ module.exports = (app, db) => {
         });
     });
     
-    // Add group via post
+    // Add channel via post
     app.post('/api/channel', (req, res) => {
-        const collection = db.collection('groups');
+        const collection = db.collection('channels');
         console.log(req.body);
-        collection.findOne({},{sort:{$natural:-1},projection:{_id:0}} ,function(err, result) { // find the last item
-            assert.equal(err, null);
-            let newid = result.id +1;
-            let query = {id:newid, name:req.body.name, groupAdmin:req.body.groupAdmin, users: req.body.users}
-            collection.insertOne(query, (err,result)=>{
-                assert.equal(err,null);
-                console.log("ADd succesful");
-                res.send({success:true})
-            });
-            
+        let query = req.body;
+        collection.insertOne(query, (err,result)=>{
+            assert.equal(err,null);
+            console.log("ADd channel succesful");
+            res.send({success:true})
         });
     });
     
-    // Update groups via put 
+    // Update channel via put 
     app.put('/api/channel/', function (req, res) {
-        let newGroup = req.body
-        console.log(newGroup)
-        const collection = db.collection('groups');
-        collection.deleteOne({name:newGroup.name}, (err,result)=>{
+        let count = 0
+        let newChannel = req.body
+        const collection = db.collection('channels');
+        collection.deleteOne({name:newChannel.name}, (err,result)=>{
             assert.equal(err,null);
-            collection.insertOne(newGroup, (err,result)=>{
+            console.log('delete first');
+            collection.insertOne(newChannel, (err,result)=>{
                 assert.equal(err,null);
+                console.log("Update channel succesful");
                 res.send({success:true})
+                
             });
         });
     });
-    // DELETE GROUP
+    // DELETE Channels
     app.delete('/api/channel/:name', function (req, res) {
         let query = {name:req.params.name};
-        const groupcollection = db.collection('groups');
-        groupcollection.deleteOne(query,function(err, result) {
+        const collection = db.collection('channels');
+        collection.deleteOne(query,function(err, result) {
             assert.equal(err, null);
-            console.log("Deleted");
+            console.log("Deleted succesful");
             // console.log(result);
             res.send(result);
         });
-
-        
     });
 
 

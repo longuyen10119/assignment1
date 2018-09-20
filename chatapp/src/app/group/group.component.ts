@@ -89,7 +89,9 @@ export class GroupComponent implements OnInit {
   getUsersInGroup(group){
     // set localStorage
     this.currentgroup = group;
+    localStorage.setItem('objectGroup', JSON.stringify(group));
     localStorage.setItem('group', group.name);
+    localStorage.setItem('groupid', group.id);
     let groupusers = []
     for(let i=0; i<group.users.length; i++){
       let id = group.users[i]

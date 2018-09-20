@@ -23,21 +23,20 @@ export class ChannelComponent implements OnInit {
   public usersInChannel;
   chooseusertype: String;
   currentGroupName: String;
-  public currentGroup;
+  public currentgroup;
   public currentChannel;
 
   ngOnInit() {
     // If you haven't logged in
-    // console.log('HELLLLLlllllllllefjelifjelfjelfjelfejflejflelllll')
     if(localStorage.length == 0){
       window.alert('Havent logged in');
       this.router.navigateByUrl('/login');
     }else{// also when loading check user in localStorage if user is normal, admin or super
-      console.log('HELLLLLlllllllllefjelifjelfjelfjelfejflejflelllll')
       this.displayName = localStorage.getItem('user');
       console.log(this.displayName);
       this.usertypestring = localStorage.getItem('usertype');
       this.currentGroupName = localStorage.getItem('group');
+      this.currentgroup = JSON.parse(localStorage.getItem('objectGroup'));
       switch(this.usertypestring){
         case 'super':
           this.usertype = 1;
@@ -50,9 +49,10 @@ export class ChannelComponent implements OnInit {
           break;
         }
     }
-    this.getChannels();
+    
     this.getUsers();
     this.getGroups();
+    this.getChannels();
   }
     // List of Channel services-----------
     // getChannels
@@ -65,12 +65,10 @@ export class ChannelComponent implements OnInit {
 
     // get channels in current group
     getChannels() {
-      console.log(this.groups);
-      console.log(localStorage.getItem('user'));
-      console.log(localStorage.getItem('usertype'));
-      console.log(localStorage.getItem('group'));
-      let foundgroup = this.groups.find(x =>x.name == this.currentGroupName)
-      this._channelService.getChannels(foundgroup.id).subscribe(
+      let tempgroup = JSON.parse(localStorage.getItem('objectGroup'));
+      console.log(tempgroup);
+      let groupid = localStorage.getItem('groupid');
+      this._channelService.getChannels(groupid).subscribe(
         data => { this.channels = data;
                   console.log(data) },
         err => console.error(err),
@@ -78,16 +76,23 @@ export class ChannelComponent implements OnInit {
       );
     }
     // Create new channel within this group
-    createChannel(channel){
-      let temp = {channel: channel, group: this.currentGroupName};
-      this._channelService.createChannel(temp).subscribe(
+    createChannel(name){
+      for(let i =0; i<this.channels.length; i++){// check for existing channels 
+        if(this.channels[i].name==name){
+          window.alert('Channel exists. Try a different name');
+          return;
+        }
+      }
+      let groupid = parseInt(localStorage.getItem('groupid'));
+      let newChannel = {
+        name : name,
+        groupid : groupid,
+        users : []
+      }
+      this._channelService.createChannel(newChannel).subscribe(
         data => {
-          if(data==null){
-            window.alert('Channel exists. Try different name');
-          }else{
             this.getChannels();
             return true;
-          }
         },
         error => {
           console.error(error);
@@ -95,9 +100,7 @@ export class ChannelComponent implements OnInit {
       );
     }
     deleteChannel(channel){
-      let temp = {channel: channel.name, group: this.currentGroupName};
-      console.log(temp);
-      this._channelService.deleteChannel(temp).subscribe(
+      this._channelService.deleteChannel(channel).subscribe(
         data => {
           this.getChannels();
           this.usersInChannel = [];
@@ -113,31 +116,35 @@ export class ChannelComponent implements OnInit {
       this.currentChannel = channel;
       console.log(this.currentChannel);
       localStorage.setItem('channel', this.currentChannel.name);
-      this._channelService.getUsersInChannel(channel).subscribe(
-        data => {
-          console.log(data);
-          this.usersInChannel = data;
-          return true;
-        },
-        error => {
-          console.error('Error getting all users in channel');
-        },
-        () => {console.log(this.usersInChannel);}
-      );
+      let tempusers = []
+      for(let i = 0; i< channel.users.length;i++){
+        let auser = this.users.find(x => x.id==channel.users[i]);
+        tempusers.push(auser);
+      }
+      this.usersInChannel = tempusers;
       
     }
     addUserToChannel(name){
-      let temp = {user: name, channel: this.currentChannel.name, groupname: this.currentGroupName};
-      this._channelService.addUserToChannel(temp).subscribe(
-        data => {
-          console.log(data);
-          return true;
-        },
-        error => {
-          console.error('Error getting all users in channel');
-        },
-        () => {console.log(this.usersInChannel);}
-      );
+      let founduser = this.users.find(x=> x.name==name);
+      console.log(this.currentChannel);
+      console.log(this.currentgroup);
+      if(typeof founduser !== 'undefined'){ // if user does exist in list
+        this.currentChannel.users.push(founduser.id);
+      }else{ // if user doesn't then need to add to list of users
+        this.createUser(name);
+        let id = this.users[this.users.length-1].id;
+        id += 1;
+        this.currentgroup.users.push(id);
+        this.currentChannel.users.push(id);
+        console.log(this.currentgroup);
+        console.log(this.currentChannel);
+      }
+      //
+      this.updateChannel(this.currentChannel);
+      
+      // this.updateGroup(this.currentgroup);
+      this.getGroups();
+      this.getChannels();
     }
     deleteUserFromChannel(user){
       // just need user id and channel id and group id
@@ -148,6 +155,17 @@ export class ChannelComponent implements OnInit {
         () => {this.getUsersInChannel(this.currentChannel);
                console.log(this.usersInChannel)  ;
                  }
+      );
+    }
+    updateChannel(channel) {
+      this._channelService.updateChannel(channel).subscribe(
+        data => {
+          this.getChannels();
+          return true;
+        },
+        error => {
+          console.error('Error updating groups');
+        }
       );
     }
 
@@ -200,6 +218,17 @@ export class ChannelComponent implements OnInit {
                 console.log(data) },
       err => console.error(err),
       () => console.log('done loading groups')
+    );
+  }
+  updateGroup(group) {
+    this._groupService.updateGroup(group).subscribe(
+      data => {
+        this.getGroups();
+        return true;
+      },
+      error => {
+        console.error('Error updating groups');
+      }
     );
   }
 }

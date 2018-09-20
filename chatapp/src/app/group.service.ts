@@ -33,6 +33,7 @@ export class GroupService {
   }
   createGroup(group) {
     let body = JSON.stringify(group);
+    console.log('CATCH CHANNEL HERE ' + group);
     return this.http.post('http://localhost:3000/api/group/', body, httpOptions);
   }
   deleteGroup(group) {
@@ -40,6 +41,7 @@ export class GroupService {
   }
   updateGroup(group) {
     let body = JSON.stringify(group);
+    console.log('CATCH CHANNEL HERE ' + group);
     return this.http.put('http://localhost:3000/api/group/' , body, httpOptions);
   }
   // getUsers() {

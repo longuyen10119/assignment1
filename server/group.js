@@ -23,7 +23,7 @@ module.exports = (app, db) => {
             let query = {id:newid, name:req.body.name, groupAdmin:req.body.groupAdmin, users: req.body.users}
             collection.insertOne(query, (err,result)=>{
                 assert.equal(err,null);
-                console.log("ADd succesful");
+                console.log("ADd succesful in Group");
                 res.send({success:true})
             });
             
@@ -39,6 +39,7 @@ module.exports = (app, db) => {
             assert.equal(err,null);
             collection.insertOne(newGroup, (err,result)=>{
                 assert.equal(err,null);
+                console.log("UPDATE succesful in Group");
                 res.send({success:true})
             });
         });

@@ -28,7 +28,7 @@ module.exports = (app, db) => {
             let querry = {id:newid, name:name, pass:'123', type:'normal'};
             collection.insertOne(querry, (err,result)=>{
                 assert.equal(err,null);
-                console.log("ADd succesful");
+                console.log("ADd user succesful");
                 collection.find({}, {projection:{'_id':0,pass:0}}).toArray(function(err, docs) {
                     assert.equal(err, null);
                     console.log("Found the following users");
