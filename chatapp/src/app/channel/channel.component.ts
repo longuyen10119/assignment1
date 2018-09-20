@@ -152,8 +152,11 @@ export class ChannelComponent implements OnInit {
     } else {// IF USER EXISTS
       this.currentChannel.users.push(foundUser.id);
       this.updateChannel(this.currentChannel);
-      this.currentgroup.users.push(foundUser.id);
-      this.updateGroup(this.currentgroup);
+      let foundid = this.currentgroup.users.find(x=>x==foundUser.id)
+      if(typeof foundid ==="undefined"){
+        this.currentgroup.users.push(foundUser.id);
+        this.updateGroup(this.currentgroup);
+      }
     }
 
   }
