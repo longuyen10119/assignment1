@@ -26,7 +26,6 @@ module.exports = (app, db) => {
                 console.log("ADd succesful in Group");
                 res.send({success:true})
             });
-            
         });
     });
     
@@ -54,10 +53,6 @@ module.exports = (app, db) => {
             // console.log(result);
             res.send(result);
         });
-
-        
     });
-
-
 };
 

@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { GroupService } from "../group.service";
 import { LoginService } from "../login.service";
 import { UserService } from "../user.service";
-import {Router} from "@angular/router";
-import {FormsModule} from '@angular/forms';
+import { Router } from "@angular/router";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-group',
@@ -23,24 +23,24 @@ export class GroupComponent implements OnInit {
   public currentgroup;
 
   public users;
-  
 
 
-  constructor(private router:Router, private _groupService: GroupService,
-                private _loginService: LoginService,
-                private _userService: UserService) { }
+
+  constructor(private router: Router, private _groupService: GroupService,
+    private _loginService: LoginService,
+    private _userService: UserService) { }
 
   ngOnInit() {
     //when group component is loading
     // check for localStorage if any user has logged in
     // if not then route back to log in
-    if(localStorage.length == 0){
+    if (localStorage.length == 0) {
       window.alert('Havent logged in');
       this.router.navigateByUrl('/login');
-    }else{// also when loading check user in localStorage if user is normal, admin or super
+    } else {// also when loading check user in localStorage if user is normal, admin or super
       this.displayName = localStorage.getItem('user');
       this.usertypestring = localStorage.getItem('usertype');
-      switch(this.usertypestring){
+      switch (this.usertypestring) {
         case 'super':
           this.usertype = 1;
           break;
@@ -50,87 +50,89 @@ export class GroupComponent implements OnInit {
         case 'normal':
           this.usertype = 3;
           break;
-        }
+      }
     }
-      // load groups
-      this.getGroups();
-      this.getUsers();
+    // load groups
+    this.getGroups();
+    this.getUsers();
   }
   //Add users to Specific group
-  addAUserToGroup(n, t){
+  addAUserToGroup(n, t) {
     //n is name and t is type
     // if user exists
     // get the user id, then add to users list in group
-    let founduser = this.users.find(x=> x.name==n);
-    if(typeof founduser !== 'undefined'){ // if user does exist in list
+    let founduser = this.users.find(x => x.name == n);
+    if (typeof founduser !== 'undefined') { // if user does exist in list
       this.currentgroup.users.push(founduser.id);
-    }else{ // if user doesn't then need to add to list of users
-      this.createUser(n);
-      let id = this.users[this.users.length-1].id;
+    } else { // if user doesn't then need to add to list of users
+      
+      let id = this.users[this.users.length - 1].id;
       id += 1;
-      this.currentgroup.users.push(id);
+      this.createUser(n,id);
+      // this.currentgroup.users.push(id);
     }
     //
     this.getUsers();
     this.updateGroup(this.currentgroup);
-    this.getUsersInGroup(this.currentgroup);
-    this.getGroups();
+    // this.getUsersInGroup(this.currentgroup);
+    // this.getGroups();
 
   }
   // Remove user from a group
-  removeUserFromGroup(user){
+  removeUserFromGroup(user) {
     let id = user.id
-    let index = this.currentgroup.users.findIndex(x=> x==id);
-    this.currentgroup.users.splice(index,1);
+    let index = this.currentgroup.users.findIndex(x => x == id);
+    this.currentgroup.users.splice(index, 1);
     this.updateGroup(this.currentgroup);
     this.getUsersInGroup(this.currentgroup);
     this.getGroups();
   }
-  getUsersInGroup(group){
+  getUsersInGroup(group) {
     // set localStorage
     this.currentgroup = group;
     localStorage.setItem('objectGroup', JSON.stringify(group));
     localStorage.setItem('group', group.name);
     localStorage.setItem('groupid', group.id);
     let groupusers = []
-    for(let i=0; i<group.users.length; i++){
+    for (let i = 0; i < group.users.length; i++) {
       let id = group.users[i]
-      let aUser = this.users.find(x=> x.id == id)
+      let aUser = this.users.find(x => x.id == id)
       groupusers.push(aUser);
     }
     this.usersInGroup = groupusers;
   }
   getGroups() {
     this._groupService.getGroups().subscribe(
-      data => { this.groups = data;
-                console.log(data) },
+      data => {
+        this.groups = data;
+      },
       err => console.error(err),
-      () => console.log('done loading groups')
+      // () => console.log('done loading groups')
     );
   }
 
   // CREATE NEW GROUP
   createGroup(name, admin) {
-    for(let i =0; i<this.groups.length; i++){
-      if(this.groups[i].name==name){
+    for (let i = 0; i < this.groups.length; i++) {
+      if (this.groups[i].name == name) {
         window.alert('Group exists. Try a different name');
         return;
       }
     }
-    let adminUser = this.users.find(x=> x.name== admin);
+    let adminUser = this.users.find(x => x.name == admin);
     adminUser.type = 'groupadmin';
-    console.log(adminUser);
+    // console.log(adminUser);
     this.updateUser(adminUser);
     let group = {
-      'name' : name,
+      'name': name,
       'groupAdmin': adminUser.id,
       'users': [adminUser.id]
     }
     this._groupService.createGroup(group).subscribe(
       data => {
-          this.getGroups();
-          this.getUsers();
-          return true;
+        this.getGroups();
+        this.getUsers();
+        return true;
       },
       error => {
         console.error(error);
@@ -142,6 +144,7 @@ export class GroupComponent implements OnInit {
     this._groupService.updateGroup(group).subscribe(
       data => {
         this.getGroups();
+        this.getUsersInGroup(this.currentgroup);
         return true;
       },
       error => {
@@ -151,7 +154,7 @@ export class GroupComponent implements OnInit {
   }
   // DELETE GROUP
   deleteGroup(group) {
-    let adminUser = this.users.find(x=> x.id== group.groupAdmin);
+    let adminUser = this.users.find(x => x.id == group.groupAdmin);
     adminUser.type = 'normal';
     this.updateUser(adminUser);
     this._groupService.deleteGroup(group).subscribe(
@@ -168,16 +171,14 @@ export class GroupComponent implements OnInit {
 
   //////////////////adding Some User Service here
   getUsers() {
-    console.log('getUsers is being called in components');
     this._userService.getUsers().subscribe(
-      data => { this.users = data; 
-                console.log(data)},
+      data => { this.users = data; },
       err => console.error(err),
       () => console.log('done loading users')
     );
   }
   //Create new users
-  createUser(name) {
+  createUser(name,id) {
     // for(let i =0; i<this.users.length; i++){
     //   if(this.users[i].name==name){
     //     window.alert('User exists. Try a different name');
@@ -190,10 +191,13 @@ export class GroupComponent implements OnInit {
     this._userService.createUser(user).subscribe(
       data => {
         this.users = data;
+        this.currentgroup.users.push(id);
+        this.updateGroup(this.currentgroup);
       },
       error => {
         console.error('Error creating users');
-      }
+      },
+      // ()=>{this.getUsersInGroup(this.currentgroup)}
     );
   }
   updateUser(user) {
@@ -217,7 +221,7 @@ export class GroupComponent implements OnInit {
       error => {
         console.error('Error deleting group');
       },
-      ()=>{this.getUsers();}
+      () => { this.getUsers(); }
 
     );
   }

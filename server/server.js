@@ -37,7 +37,6 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
     const db = client.db(dbName);
     ///// Let's try to create a sample database
     // Find out if collection is empty
-
     // USER COLLECTION
     const usercollection = db.collection('users');
     usercollection.countDocuments(function(err, count){
