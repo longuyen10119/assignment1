@@ -115,6 +115,7 @@ export class ChannelComponent implements OnInit {
   // get all users in this channel
   getUsersInChannel(channel) {
     this.currentChannel = channel;
+    localStorage.setItem('channelObject',JSON.stringify(channel));
     console.log(this.currentChannel);
     localStorage.setItem('channel', this.currentChannel.name);
     let tempusers = []

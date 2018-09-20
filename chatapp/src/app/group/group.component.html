@@ -25,7 +25,7 @@
         <div class="card-header">Users in {{currentgroup.name}} Group</div>
         <div ng- class="card-body">
           <tr *ngFor="let userin of usersInGroup">
-            <td>
+            <td *ngIf="usertype==1 || usertype==2">
               {{userin.name}} - {{userin.type}}
             </td>
             <td *ngIf="usertype!=3">

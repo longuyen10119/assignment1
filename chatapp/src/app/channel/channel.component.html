@@ -21,7 +21,7 @@
         </tr>
       </div>
     </div>
-    <div *ngIf="show==true && (usertype==1 || usertype==2)" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+    <div *ngIf="show==true" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
         <div class="card-header">Users in {{currentChannel.name}}  Channel</div>
         <div ng- class="card-body">
           <tr *ngFor="let u of usersInChannel">

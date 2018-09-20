@@ -65,10 +65,10 @@ export class GroupComponent implements OnInit {
     if (typeof founduser !== 'undefined') { // if user does exist in list
       this.currentgroup.users.push(founduser.id);
     } else { // if user doesn't then need to add to list of users
-      
+
       let id = this.users[this.users.length - 1].id;
       id += 1;
-      this.createUser(n,id);
+      this.createUser(n, id);
       // this.currentgroup.users.push(id);
     }
     //
@@ -107,7 +107,19 @@ export class GroupComponent implements OnInit {
         this.groups = data;
       },
       err => console.error(err),
-      // () => console.log('done loading groups')
+      () => {
+        if (this.usertype == 3) {
+          let userid = localStorage.getItem('userId');
+          let newgroups = []
+          for (let i = 0; i < this.groups.length; i++) {
+            let found = this.groups[i].users.find(x=>x==userid);
+            if(typeof found!=="undefined"){
+              newgroups.push(this.groups[i]);
+            }
+          }
+          this.groups = newgroups;
+        }
+      }
     );
   }
 
@@ -178,7 +190,7 @@ export class GroupComponent implements OnInit {
     );
   }
   //Create new users
-  createUser(name,id) {
+  createUser(name, id) {
     // for(let i =0; i<this.users.length; i++){
     //   if(this.users[i].name==name){
     //     window.alert('User exists. Try a different name');
