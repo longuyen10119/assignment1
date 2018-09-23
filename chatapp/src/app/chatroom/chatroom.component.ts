@@ -30,8 +30,7 @@ export class ChatroomComponent implements OnInit {
   public currentChannel;
   public messages =[];
   public message;
-  public connection1;
-  public connection2;
+  public connection;
 
   ngOnInit() {
     if (localStorage.length == 0) {
@@ -57,11 +56,11 @@ export class ChatroomComponent implements OnInit {
       // Getting messages 
       console.log(this.currentChannel);
       console.log("Chat session started for user: " + this.displayName);
-      this.connection1 = this.sockServer.getMessages().subscribe(message=>{
+      this.connection = this.sockServer.getMessages().subscribe(message=>{
         this.messages = Object.values(message);
         let thisChannelName = this.currentChannel.name;
         this.messages = this.messages.filter(x=> x.channel==thisChannelName);
-        
+        this.message = '';
       });
     }
   }
@@ -70,12 +69,10 @@ export class ChatroomComponent implements OnInit {
   }
 
   ngOnDestroy(){
-    if(this.connection1){
-      this.connection1.unsubscribe();
+    if(this.connection){
+      this.connection.unsubscribe();
     }
-    if(this.connection2){
-      this.connection2.unsubscribe();
-    }
+
   }
 
 }

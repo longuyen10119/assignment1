@@ -54,5 +54,8 @@ module.exports = function(app, db, io){
         // socket.on('add-message', (message)=>{
         //     io.emit('message', {type:'message', text: message});
         // });
+        socket.on('disconnect', function(){
+            console.log('user disconnected');
+        });
     });
 }
