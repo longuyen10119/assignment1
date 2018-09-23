@@ -5,7 +5,9 @@ const http = require('http').Server(app);
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
-const io = require('socket.io')(http);
+const io = require('socket.io')(http); // Socket.io 
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); // support json encoded bodies
 var corsOptions = {
@@ -104,6 +106,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
     require('./user.js')(app,db);
     require('./group.js')(app,db);
     require('./channel.js')(app,db);
+    // require('./socket.js')(app, db, io);
 
     /// Open server on port 3000
     var port = 3000;
