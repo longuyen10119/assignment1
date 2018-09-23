@@ -1,5 +1,7 @@
 <div class="card bg-info mb-3">
-  <legend><h3>Hello, {{displayName}}</h3></legend>
+  <legend>
+    <h3>Hello, {{displayName}}</h3>
+  </legend>
   <h4>You are {{usertypestring}} user</h4>
 </div>
 
@@ -13,7 +15,8 @@
             {{group.name}}
           </td>
           <td>
-            <button  class="btn btn-xs btn-primary" (click)="show=!show; getUsersInGroup(group)">{{show ? 'Hide' : 'Show'}}</button>
+            <button class="btn btn-xs btn-primary" (click)="show=!show; getUsersInGroup(group)">{{show ? 'Hide' :
+              'Show'}}</button>
           </td>
           <td *ngIf="usertype==1">
             <button (click)="deleteGroup(group); show=false" class="btn btn-xs btn-warning">Delete</button>
@@ -22,43 +25,46 @@
       </div>
     </div>
     <div *ngIf="show==true" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
-        <div class="card-header">Users in {{currentgroup.name}} Group</div>
-        <div ng- class="card-body">
-          <tr *ngFor="let userin of usersInGroup">
-            <td *ngIf="usertype==1 || usertype==2">
-              {{userin.name}} - {{userin.type}}
-            </td>
-            <td *ngIf="usertype!=3">
-              <button (click)="removeUserFromGroup(userin)" class="btn btn-xs btn-warning">Remove</button>
-            </td>
-          </tr>
-            <button class="btn btn-secondary btn-lg btn-block text-truncate mt-auto" routerLink="/channel" class="btn btn-xs btn-primary">Go to Channels of {{currentgroup.name}}</button>
-        </div>
+      <div class="card-header">Users in {{currentgroup.name}} Group</div>
+      <div ng- class="card-body">
+        <tr *ngFor="let userin of usersInGroup">
+          <td *ngIf="usertype==1 || usertype==2">
+            {{userin.name}} - {{userin.type}}
+          </td>
+          <td *ngIf="usertype!=3">
+            <button (click)="removeUserFromGroup(userin)" class="btn btn-xs btn-warning">Remove</button>
+          </td>
+        </tr>
+        <button class="btn btn-secondary btn-lg btn-block text-truncate mt-auto" routerLink="/channel" class="btn btn-xs btn-primary">Go
+          to Channels of {{currentgroup.name}}</button>
       </div>
-      
+    </div>
+
   </div>
 </div>
 <div class="container">
-    <div  class="row">
-        <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
-              <div *ngIf="usertype==1" class="form-group">
-                <label for="groupname">Enter Group Name to Add</label>
-                <input [(ngModel)]="groupname"  type="text" placeholder="Group Name" class="form-control">
-                <label for="example1">Choose Group Admin</label>
-                      <select [(ngModel)]="groupadminchosen" class="form-control" id="selectgroupadmin">
-                        <option *ngFor="let user of users"><ng-container *ngIf="user.type!='super' && user.type!='admin'">{{user.name}}</ng-container></option>
-                      </select>
-                <button type="submit" (click)="createGroup(groupname, groupadminchosen); show=false" class="btn btn-primary">Add</button>
-              </div>
-        </div>
-        <div *ngIf="show" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
-            <!-- <fieldset> -->
-              <div *ngIf="usertype==1 || usertype==2" class="form-group">
-                <label for="groupname">Choose User to Add to Group</label>
-                      <input [(ngModel)]="username"  type="text" placeholder="User Name" class="form-control">
-                      <button type="submit" (click)="addAUserToGroup(username, chooseusertype)" class="btn btn-primary">Add</button>
-              </div>
-            <!-- </fieldset> -->
-        </div>
+  <div class="row">
+    <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+      <div *ngIf="usertype==1" class="form-group">
+        <label for="groupname">Enter Group Name to Add</label>
+        <input [(ngModel)]="groupname" type="text" placeholder="Group Name" class="form-control">
+        <label for="example1">Choose Group Admin</label>
+        <select [(ngModel)]="groupadminchosen" class="form-control" id="selectgroupadmin">
+          <option *ngFor="let user of users">
+            <ng-container *ngIf="user.type!='super' && user.type!='admin'">{{user.name}}</ng-container>
+          </option>
+        </select>
+        <button type="submit" (click)="createGroup(groupname, groupadminchosen); show=false" class="btn btn-primary">Add</button>
+      </div>
     </div>
+    <div *ngIf="show" class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+      <!-- <fieldset> -->
+      <div *ngIf="usertype==1 || usertype==2" class="form-group">
+        <label for="groupname">Choose User to Add to Group</label>
+        <input [(ngModel)]="username" type="text" placeholder="User Name" class="form-control">
+        <button type="submit" (click)="addAUserToGroup(username, chooseusertype)" class="btn btn-primary">Add</button>
+      </div>
+      <!-- </fieldset> -->
+    </div>
+  </div>
 </div>

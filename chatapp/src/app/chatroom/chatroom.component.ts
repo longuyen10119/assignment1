@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ChannelService } from "../channel.service";
 import { UserService } from '../user.service';
 import { GroupService } from '../group.service';
+import { SocketService } from '../socket.service';
+
 @Component({
   selector: 'app-chatroom',
   templateUrl: './chatroom.component.html',
@@ -13,7 +15,8 @@ export class ChatroomComponent implements OnInit {
 
   constructor(private router: Router, private _channelService: ChannelService,
               private _userService: UserService,
-              private _groupService: GroupService) { }
+              private _groupService: GroupService,
+              private sockServer: SocketService) { }
   public users;
   public groups;
   public usertype;
@@ -25,6 +28,11 @@ export class ChatroomComponent implements OnInit {
   currentGroupName: String;
   public currentgroup;
   public currentChannel;
+  public messages =[];
+  public message;
+  public connection1;
+  public connection2;
+
   ngOnInit() {
     if (localStorage.length == 0) {
       window.alert('Havent logged in');
@@ -46,6 +54,27 @@ export class ChatroomComponent implements OnInit {
           this.usertype = 3;
           break;
       }
+      // Getting messages 
+      console.log(this.currentChannel);
+      console.log("Chat session started for user: " + this.displayName);
+      this.connection1 = this.sockServer.getMessages().subscribe(message=>{
+        this.messages = Object.values(message);
+        let thisChannelName = this.currentChannel.name;
+        this.messages = this.messages.filter(x=> x.channel==thisChannelName);
+        
+      });
+    }
+  }
+  sendMessage(){
+    this.sockServer.sendMessage({channel:this.currentChannel.name, username:this.displayName, message: this.message});
+  }
+
+  ngOnDestroy(){
+    if(this.connection1){
+      this.connection1.unsubscribe();
+    }
+    if(this.connection2){
+      this.connection2.unsubscribe();
     }
   }
 

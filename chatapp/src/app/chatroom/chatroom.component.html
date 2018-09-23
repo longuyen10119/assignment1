@@ -1,14 +1,18 @@
 <div class="card bg-info mb-3">
-  <legend><h3>Hello, {{displayName}}</h3></legend>
+  <legend>
+    <h3>Hello, {{displayName}}</h3>
+  </legend>
   <!-- <h4>You are {{usertypestring}} user</h4> -->
   <h4>You are in {{currentGroupName}} Group</h4>
   <h4>You are in {{currentChannel.name}} Channel</h4>
 </div>
 
-  <div id="chat_history" style="overflow-y: scroll; height: 300px">
-    <div *ngFor="let message of messages">
-      {{ message.text }}
-    </div>
+<div id="chat_history" style="overflow-y: auto; height: 500px">
+  <div *ngFor="let message of messages">
+      {{message.username}}: {{message.message}}
   </div>
-  <input [(ngModel)]="message" type="text" placeholder="message" id="message" name="message" class="form-control">
-  <button (click)="sendMessage(message)" class="btn btn-primary">Send</button>
+</div>
+
+
+<input [(ngModel)]="message" type="text" placeholder="message" id="message" name="message" class="form-control">
+<button (click)="sendMessage(message)" class="btn btn-primary">Send</button>

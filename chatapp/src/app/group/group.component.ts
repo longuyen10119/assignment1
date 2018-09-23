@@ -21,9 +21,8 @@ export class GroupComponent implements OnInit {
   public displayName;
   chooseusertype: String;
   public currentgroup;
-
   public users;
-
+  username: string;
 
 
   constructor(private router: Router, private _groupService: GroupService,
@@ -74,6 +73,7 @@ export class GroupComponent implements OnInit {
     //
     this.getUsers();
     this.updateGroup(this.currentgroup);
+    this.username = '';
     // this.getUsersInGroup(this.currentgroup);
     // this.getGroups();
 
