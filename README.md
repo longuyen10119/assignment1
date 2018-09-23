@@ -9,7 +9,7 @@ The NodeJS server side is in the folder side.
 
 ## 2. DATA STRUCTURE
 #### *Describe the main data structures used in the program. For example, how the users and groups are represented.*
-We are using MongoDB, connecting on port 27017. The database name is 'assignment2' and it has three collections to store users, groups, and channels.
+We are using MongoDB, connecting on port 27017. The database name is 'assignment2' and it has following collections:
 * users: id, name, and type
 * groups: id, name, and list of user ids
 * channels: name, groupid, and list of user ids
