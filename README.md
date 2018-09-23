@@ -13,6 +13,7 @@ We are using MongoDB, connecting on port 27017. The database name is 'assignment
 * users: id, name, and type
 * groups: id, name, and list of user ids
 * channels: name, groupid, and list of user ids
+* chats: channel, username, message - storing chat history
 
 ## 3. REST API
 #### *The Angular front end should communicate with the Node.js server using a REST API. Describe each route provided, parameters, return values, and what it does.*
