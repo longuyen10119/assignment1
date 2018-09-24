@@ -1,13 +1,14 @@
 <div class="card bg-info mb-3">
   <div class="row">
     <h3>Profile Picture</h3>
+    <img height="200" width="200" src="{{imagePath}}" />
+
     <form>
-      <div class="form-group">
-        <input type="file" class="form-control" (change)="onFileSelected($event)" name="uploadFile" id="uploadFile"/>
-      </div>
+      <input type="file" size="60" class="form-control" (change)="onFileSelected($event)" name="uploadFile" id="uploadFile" />
+
       <button type="button" class="btn btn-primary" (click)="uploadProfile()">Upload</button>
     </form>
-    <img src="uploads\{{imagePath}}"/>
+
   </div>
   <div class="row">
     <legend>

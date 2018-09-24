@@ -13,6 +13,7 @@ export class UploadService {
   }
   // Upload profile pic
   uploadProfile(fd){ 
+    console.log('DATA FORM in service ' + fd)
     return this.http.post<any>('http://localhost:3000/api/upload', fd)
   }
 }

@@ -48,8 +48,7 @@ module.exports=(app, db)=>{
         let query = {id:id}
         profile.findOne(query,(err,result)=>{
             // assert(err,null);
-            console.log(result);
-
+            // console.log(result);
             if(result==null){//if id doesn't exist in database Add one
                 let query1 = {id:id, path: req.file.path}
                 profile.insertOne(query1, (err, result)=>{
@@ -61,7 +60,8 @@ module.exports=(app, db)=>{
                 let newvalue = { $set: { path: req.file.path } };
                 profile.updateOne(query3, newvalue, (err,result)=>{
                     if (err) throw err;
-                    res.send(req.file.path);
+                    let back = {succes: true, path: req.file.path}
+                    res.send(back);
                 }); 
             }
         });

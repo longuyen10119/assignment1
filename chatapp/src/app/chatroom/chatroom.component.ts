@@ -57,6 +57,8 @@ export class ChatroomComponent implements OnInit {
           this.usertype = 3;
           break;
       }
+      // Load profile pic
+      this.getProfile(localStorage.getItem('userId'));
       // Loading messages 
       console.log(this.currentChannel);
       console.log("Chat session started for user: " + this.displayName);
@@ -126,11 +128,15 @@ export class ChatroomComponent implements OnInit {
 
   }
   onFileSelected(event){
-    console.log(event);
+    // console.log(event);
     this.selectedFile = event.target.files[0];
   }
   getProfile(id){
-    
+    this._uploadService.getProfile(id).subscribe(res=>{
+      let temp = Object.values(res);
+      console.log(temp);
+      this.imagePath = temp[1];
+    });
   }
   uploadProfile(){ 
     const fd = new FormData();
