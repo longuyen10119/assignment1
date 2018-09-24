@@ -5,7 +5,7 @@ import { ChannelService } from "../channel.service";
 import { UserService } from '../user.service';
 import { GroupService } from '../group.service';
 import { SocketService } from '../socket.service';
-
+import { UploadService} from '../upload.service';
 @Component({
   selector: 'app-chatroom',
   templateUrl: './chatroom.component.html',
@@ -16,7 +16,8 @@ export class ChatroomComponent implements OnInit {
   constructor(private router: Router, private _channelService: ChannelService,
               private _userService: UserService,
               private _groupService: GroupService,
-              private sockServer: SocketService) { }
+              private sockServer: SocketService,
+              private _uploadService: UploadService) { }
   public users;
   public groups;
   public usertype;
@@ -33,6 +34,8 @@ export class ChatroomComponent implements OnInit {
   public connection1;
   public connection2;
   public connection3;
+  selectedFile = null;
+  imagePath="";
   ngOnInit() {
     if (localStorage.length == 0) {
       window.alert('Havent logged in');
@@ -121,6 +124,25 @@ export class ChatroomComponent implements OnInit {
       this.connection3.unsubscribe();
     }
 
+  }
+  onFileSelected(event){
+    console.log(event);
+    this.selectedFile = event.target.files[0];
+  }
+  getProfile(id){
+    
+  }
+  uploadProfile(){ 
+    const fd = new FormData();
+    let id = localStorage.getItem('userId');
+    console.log(id);
+    fd.append('id',id);
+    fd.append('profileImage',this.selectedFile);
+    console.log(fd);
+    this._uploadService.uploadProfile(fd).subscribe(res=>{
+      console.log(res);
+      this.imagePath = res.path;
+    });
   }
 
 }

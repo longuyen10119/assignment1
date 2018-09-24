@@ -128,6 +128,7 @@ export class GroupComponent implements OnInit {
     for (let i = 0; i < this.groups.length; i++) {
       if (this.groups[i].name == name) {
         window.alert('Group exists. Try a different name');
+        this.groupname = '';
         return;
       }
     }
@@ -144,6 +145,7 @@ export class GroupComponent implements OnInit {
       data => {
         this.getGroups();
         this.getUsers();
+        this.groupname = '';
         return true;
       },
       error => {

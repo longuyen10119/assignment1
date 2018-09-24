@@ -1,10 +1,23 @@
 <div class="card bg-info mb-3">
-  <legend>
-    <h3>Hello, {{displayName}}</h3>
-  </legend>
-  <!-- <h4>You are {{usertypestring}} user</h4> -->
-  <h4>You are in {{currentGroupName}} Group</h4>
-  <h4>You are in {{currentChannel.name}} Channel</h4>
+  <div class="row">
+    <h3>Profile Picture</h3>
+    <form>
+      <div class="form-group">
+        <input type="file" class="form-control" (change)="onFileSelected($event)" name="uploadFile" id="uploadFile"/>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="uploadProfile()">Upload</button>
+    </form>
+    <img src="uploads\{{imagePath}}"/>
+  </div>
+  <div class="row">
+    <legend>
+      <h3>Hello, {{displayName}}</h3>
+    </legend>
+    <!-- <h4>You are {{usertypestring}} user</h4> -->
+    <h4>You are in {{currentGroupName}} Group</h4>
+    <h4>You are in {{currentChannel.name}} Channel</h4>
+  </div>
+
 </div>
 
 <div id="chat_history" style="overflow-y: auto; height: 500px">
@@ -13,8 +26,8 @@
       {{message.message}}
     </p>
     <p class="text-left" *ngIf="displayName!=message.username">
-        {{message.username}}: {{message.message}}
-      </p>
+      {{message.username}}: {{message.message}}
+    </p>
   </div>
 </div>
 

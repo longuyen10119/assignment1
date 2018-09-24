@@ -37,9 +37,13 @@ module.exports=(app, db)=>{
     });
     // Route to upload an image and also update if image exists
     app.post('/api/upload',upload.single('profileImage'),(req, res)=>{
+        console.log('In API FOR UPLOAD');
         let name = req.body.name;
         let id = req.body.id;
+        // console.log(req);
+        // console.log(req.body);
         console.log(req.file);
+        console.log('FILE PATH IS ' + req.file.path );
         // let query = {id:id, path: req.file.path};
         let query = {id:id}
         profile.findOne(query,(err,result)=>{
@@ -57,7 +61,7 @@ module.exports=(app, db)=>{
                 let newvalue = { $set: { path: req.file.path } };
                 profile.updateOne(query3, newvalue, (err,result)=>{
                     if (err) throw err;
-                    res.send(result);
+                    res.send(req.file.path);
                 }); 
             }
         });
