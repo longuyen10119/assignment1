@@ -25,7 +25,7 @@ export class ChannelComponent implements OnInit {
   currentGroupName: String;
   public currentgroup;
   public currentChannel;
-
+  addchannelname;
   ngOnInit() {
     // If you haven't logged in
     if (localStorage.length == 0) {
@@ -93,6 +93,7 @@ export class ChannelComponent implements OnInit {
     this._channelService.createChannel(newChannel).subscribe(
       data => {
         this.getChannels();
+        this.addchannelname = '';
         return true;
       },
       error => {

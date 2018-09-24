@@ -9,7 +9,12 @@
 
 <div id="chat_history" style="overflow-y: auto; height: 500px">
   <div *ngFor="let message of messages">
-      {{message.username}}: {{message.message}}
+    <p class="text-right" *ngIf="displayName==message.username">
+      {{message.message}}
+    </p>
+    <p class="text-left" *ngIf="displayName!=message.username">
+        {{message.username}}: {{message.message}}
+      </p>
   </div>
 </div>
 

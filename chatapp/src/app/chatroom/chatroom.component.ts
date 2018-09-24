@@ -64,11 +64,25 @@ export class ChatroomComponent implements OnInit {
         
       });
       // Send out status
-      let status = {username: this.displayName, status: 1}
+      let status = {channel: this.currentChannel.name, username: 'Attention ' + this.displayName, status: 1}
       this.sockServer.sendStatus(status);
       // Getting messages
       this.connection2 = this.sockServer.getMessages().subscribe(message=>{
-        this.messages.push(message);
+        let temp = Object.values(message);
+        let tempchannel = temp[0]
+        let tempuser = temp[1]
+        let tempmessage = temp[2]
+        if (tempchannel == this.currentChannel.name){
+          var lastmessage = this.messages[this.messages.length-1].username;
+          console.log(lastmessage);
+          let pos = lastmessage.indexOf("Attention");
+          console.log(pos)
+          if(pos!=-1){
+            this.messages.pop();
+          }
+          let addmessage = {channel:tempchannel, username: tempuser, message: tempmessage};
+          this.messages.push(addmessage);
+        }
         this.message = '';
       });
 
@@ -79,14 +93,14 @@ export class ChatroomComponent implements OnInit {
         let temp = Object.values(message);
         console.log(temp);
         let statusMessage
-        if(temp[1]==1){
-          statusMessage = {channel:this.currentChannel.name, username:temp[0], message:'----------has just joined the chatroom----------------'};
-        } else{
-          statusMessage = {channel:this.currentChannel.name, username:temp[0], message:'----------has just left the chatroom----------------'};
+        if(temp[0]==this.currentChannel.name){
+          if(temp[2]==1){
+            statusMessage = {channel:this.currentChannel.name, username:temp[1], message:'----------has just joined the chatroom----------------'};
+          } else{
+            statusMessage = {channel:this.currentChannel.name, username:temp[1], message:'----------has just left the chatroom----------------'};
+          }
+          this.messages.push(statusMessage);
         }
-        
-        this.messages.push(statusMessage);
-        // this.message = '';
       });
     }
   }
@@ -95,7 +109,7 @@ export class ChatroomComponent implements OnInit {
   }
 
   ngOnDestroy(){
-    let status = {username: this.displayName, status: 2}
+    let status = {channel: this.currentChannel.name, username: 'Attention ' + this.displayName, status: 2}
       this.sockServer.sendStatus(status);
     if(this.connection1){
       this.connection1.unsubscribe();
