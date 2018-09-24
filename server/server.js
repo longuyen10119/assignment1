@@ -20,6 +20,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 /// Linking to serve the angular route//////////////////////
 // app.use(cors(corsOptions))
 // app.use(express.static(path.join(__dirname, '../chatapp/dist/chatapp')));
+app.use('/uploads',express.static('uploads'));
 // app.get('/', function (req, res) {
 //     res.sendFile(path.join(__dirname, '../chatapp/dist/chatapp/index.html'))
 // });
