@@ -14,6 +14,7 @@ We are using MongoDB, connecting on port 27017. The database name is 'assignment
 * groups: id, name, and list of user ids
 * channels: name, groupid, and list of user ids
 * chats: channel, username, message - storing chat history
+* profiles: id, path - storing user id and profile image path
 
 ## 3. REST API
 #### *The Angular front end should communicate with the Node.js server using a REST API. Describe each route provided, parameters, return values, and what it does.*
@@ -32,6 +33,9 @@ We are using MongoDB, connecting on port 27017. The database name is 'assignment
   * post /api/channel - create a new channel
   * put /api/channel - update a channel
   * delete /api/channel - delete a channel
+* Upload - Routes for upload service
+  * get /api/upload/:id - get the profile picture file path for the user
+  * post /api/upload/ - upload a profile picture
 ## 4. ANGULAR ARCHITECTURE
 #### *Describe your Angular architecture in terms of components, services, and models.*
 * App Component
