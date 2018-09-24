@@ -9,7 +9,7 @@ module.exports = function(app, db, io){
         sendStatus = function(s){
             socket.emit('status',s);
         }
-
+        
         // Get chat history from mongo collection
         // Limit is getting only the first 100 messages
         // sorting by _id 
@@ -20,10 +20,11 @@ module.exports = function(app, db, io){
             // assert(err,null);
             // Emit the messsagesç
             socket.emit('load', result);
+            // socket.emit('message', 'test');
         });
 
         // Handle input events INPUT EVENT
-        socket.on('input', function(data){
+        socket.on('incoming', function(data){
             let channel = data.channel;
             let username = data.username;
             let message = data.message;
@@ -34,10 +35,13 @@ module.exports = function(app, db, io){
                 sendStatus('Please enter a name and message');
             } else{ // When there is something
                 // Insert this message into database
-                chatHistory.insertOne({channel: channel, username: username, message: message}, function(){
-                    chatHistory.find({},{projection:{_id:0}}).limit(100).sort({_id:1}).toArray( (err, result) =>{
-                        socket.emit('load', result);
-                    });
+                let query = {channel: channel, username: username, message: message};
+                chatHistory.insertOne(query, function(){
+                    // chatHistory.find({},{projection:{_id:0}}).limit(100).sort({_id:1}).toArray( (err, result) =>{
+                    //     socket.emit('message', result);
+                    // });
+                    let sendback = {channel: channel, username: username, message: message};
+                    io.emit('message', sendback);
                 });
 
             }
@@ -49,6 +53,9 @@ module.exports = function(app, db, io){
             chatHistory.remove({}, function(){
                 socket.emit('cleared');
             });
+        });
+        socket.on('login', function(data){
+            socket.broadcast.emit('status', data);
         });
         // // Handl add-message event
         // socket.on('add-message', (message)=>{

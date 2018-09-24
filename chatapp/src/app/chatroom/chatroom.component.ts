@@ -30,8 +30,9 @@ export class ChatroomComponent implements OnInit {
   public currentChannel;
   public messages =[];
   public message;
-  public connection;
-
+  public connection1;
+  public connection2;
+  public connection3;
   ngOnInit() {
     if (localStorage.length == 0) {
       window.alert('Havent logged in');
@@ -53,14 +54,39 @@ export class ChatroomComponent implements OnInit {
           this.usertype = 3;
           break;
       }
-      // Getting messages 
+      // Loading messages 
       console.log(this.currentChannel);
       console.log("Chat session started for user: " + this.displayName);
-      this.connection = this.sockServer.getMessages().subscribe(message=>{
+      this.connection1 = this.sockServer.loadMessages().subscribe(message=>{
         this.messages = Object.values(message);
         let thisChannelName = this.currentChannel.name;
         this.messages = this.messages.filter(x=> x.channel==thisChannelName);
+        
+      });
+      // Send out status
+      let status = {username: this.displayName, status: 1}
+      this.sockServer.sendStatus(status);
+      // Getting messages
+      this.connection2 = this.sockServer.getMessages().subscribe(message=>{
+        this.messages.push(message);
         this.message = '';
+      });
+
+      // Getting a status
+      this.connection3 = this.sockServer.statusListen().subscribe(message=>{
+        // console.log(Object.values(message));
+        // console.log(message)
+        let temp = Object.values(message);
+        console.log(temp);
+        let statusMessage
+        if(temp[1]==1){
+          statusMessage = {channel:this.currentChannel.name, username:temp[0], message:'----------has just joined the chatroom----------------'};
+        } else{
+          statusMessage = {channel:this.currentChannel.name, username:temp[0], message:'----------has just left the chatroom----------------'};
+        }
+        
+        this.messages.push(statusMessage);
+        // this.message = '';
       });
     }
   }
@@ -69,8 +95,16 @@ export class ChatroomComponent implements OnInit {
   }
 
   ngOnDestroy(){
-    if(this.connection){
-      this.connection.unsubscribe();
+    let status = {username: this.displayName, status: 2}
+      this.sockServer.sendStatus(status);
+    if(this.connection1){
+      this.connection1.unsubscribe();
+    }
+    if(this.connection2){
+      this.connection2.unsubscribe();
+    }
+    if(this.connection3){
+      this.connection3.unsubscribe();
     }
 
   }
