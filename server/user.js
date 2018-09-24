@@ -47,7 +47,7 @@ module.exports = (app, db) => {
         var newvalues = { $set: { type: req.body.type } };
         collection.updateOne(query, newvalues, function(err, res) {
             if (err) throw err;
-            console.log("1 document updated");
+            console.log("1 user updated");
           });
         
     });

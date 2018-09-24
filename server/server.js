@@ -19,13 +19,13 @@ app.use(bodyParser.json()); // support json encoded bodies
 
 /// Linking to serve the angular route//////////////////////
 // app.use(cors(corsOptions))
-app.use(express.static(path.join(__dirname, '../chatapp/dist/chatapp')));
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, '../chatapp/dist/chatapp/index.html'))
-});
-app.get('/students', function (req, res) {
-    res.sendFile(path.join(__dirname, '../chatapp/dist/chatapp/index.html'))
-});
+// app.use(express.static(path.join(__dirname, '../chatapp/dist/chatapp')));
+// app.get('/', function (req, res) {
+//     res.sendFile(path.join(__dirname, '../chatapp/dist/chatapp/index.html'))
+// });
+// app.get('/students', function (req, res) {
+//     res.sendFile(path.join(__dirname, '../chatapp/dist/chatapp/index.html'))
+// });
 //////////////////////////////////////////////////////
 const MongoClient = require('mongodb').MongoClient;
 //connection URL
@@ -188,7 +188,7 @@ MongoClient.connect(url, {
     require('./channel.js')(app, db);
     require('./socket.js')(app, db, io);
     require('./listen.js')(http);
-
+    require('./upload.js')(app, db);
     /// Open server on port 3000
     // var port = 3000;
     // app.listen(port, function(){ //listen on port
