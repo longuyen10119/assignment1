@@ -69,9 +69,7 @@ export class ChatroomComponent implements OnInit {
         this.messages = this.messages.filter(x=> x.channel==thisChannelName);
         
       });
-      // Send out status
-      let status = {channel: this.currentChannel.name, username: 'Attention ' + this.displayName, status: 1, path:this.imagePath}
-      this.sockServer.sendStatus(status);
+      
       // Getting messages
       this.connection2 = this.sockServer.getMessages().subscribe(message=>{
         let temp = Object.values(message);
@@ -99,14 +97,17 @@ export class ChatroomComponent implements OnInit {
         if(temp[0]==this.currentChannel.name){
           if(temp[2]==1){
             statusMessage = {channel:this.currentChannel.name, username:temp[1], message:'----------has just joined the chatroom----------------'};
-            this.usersInChannel.push({path:temp[3],username:temp[1]});
           } else{
             statusMessage = {channel:this.currentChannel.name, username:temp[1], message:'----------has just left the chatroom----------------'};
-            this.usersInChannel = this.usersInChannel.filter(x=>x.username!=temp[1])
           }
           this.messages.push(statusMessage);
         }
       });
+
+      // Send out status
+      let status = {channel: this.currentChannel.name, username: 'Attention ' + this.displayName, status: 1, path:this.imagePath}
+      this.sockServer.sendStatus(status);
+      
     }
   }
   sendMessage(){

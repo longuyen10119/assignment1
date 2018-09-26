@@ -3,42 +3,31 @@
     <div class="col-lg-2">
       <img id="rcorners2" height="200" width="200" src="{{imagePath}}" />
       <form>
-        <input type="file" size="60" class="form-control" (change)="onFileSelected($event)" name="uploadFile" id="uploadFile" />
+        <input type="file" class="form-control-file" id="exampleInputFile" (change)="onFileSelected($event)"
+          aria-describedby="fileHelp">
         <button type="button" class="btn btn-primary" (click)="uploadProfile()">Upload</button>
       </form>
     </div>
     <div class="col-sm-1"></div>
     <div class="col-sm-4">
-        <br> <br> 
-        <h3 style="color:#A02517">Hello {{displayName}}</h3>
-        <h6 style="color:#A02517">You are in {{currentGroupName}} Group</h6>
-        <h6 style="color:#A02517">You are in {{currentChannel.name}} Channel</h6>
-      
-    </div>
+      <br> <br>
+      <h3 style="color:#A02517">Hello {{displayName}}</h3>
+      <h6 style="color:#A02517">You are in {{currentGroupName}} Group</h6>
+      <h6 style="color:#A02517">You are in {{currentChannel.name}} Channel</h6>
 
-    <div class="col-lg-5">
-      <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
-        <div class="card-header">Users In Channel</div>
-        <div class="card-body">
-          <tr *ngFor="let user of usersInChannel">
-            <td></td>
-          </tr>
-        </div>
-      </div>
     </div>
-
   </div>
 </div>
 <div class="row">
 
   <div class="col-lg-12">
-    <div id="chat_history" style="overflow-y: auto; height: 500px">
+    <div id="chat_history" style="overflow-y: auto; height: 600px">
       <div *ngFor="let message of messages">
         <p id="rcornersMySelf" *ngIf="displayName==message.username">
           {{message.message}}
         </p>
         <p id="rcornersOthers" *ngIf="displayName!=message.username">
-          <img id="rcorners3" *ngIf="message.path" height="40" width="40" src="{{message.path}}" /> <strong *ngIf="!message.path">{{message.username}}:</strong>
+          <img id="rcorners3" *ngIf="message.path" height="40" width="40" src="{{message.path}}" /> <strong>{{message.username}}:</strong>
           {{message.message}}
         </p>
       </div>
