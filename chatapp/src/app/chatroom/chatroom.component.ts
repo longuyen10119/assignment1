@@ -78,13 +78,7 @@ export class ChatroomComponent implements OnInit {
         let tempuser = temp[1]
         let tempmessage = temp[2]
         if (tempchannel == this.currentChannel.name){
-          var lastmessage = this.messages[this.messages.length-1].username;
-          console.log(lastmessage);
-          let pos = lastmessage.indexOf("Attention");
-          console.log(pos)
-          if(pos!=-1){
-            this.messages.pop();
-          }
+          this.messages = this.messages.filter(x => x.username.indexOf("Attention")==-1);
           let addmessage = {channel:tempchannel, username: tempuser, message: tempmessage};
           this.messages.push(addmessage);
         }
@@ -134,8 +128,10 @@ export class ChatroomComponent implements OnInit {
   getProfile(id){
     this._uploadService.getProfile(id).subscribe(res=>{
       let temp = Object.values(res);
-      console.log(temp);
-      this.imagePath = temp[1];
+      if(typeof temp!==undefined){
+        console.log(temp);
+        this.imagePath = temp[1];
+      }
     });
   }
   uploadProfile(){ 

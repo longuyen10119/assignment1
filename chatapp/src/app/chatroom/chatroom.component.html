@@ -1,24 +1,25 @@
 <div class="card bg-info mb-3">
   <div class="row">
-    <h3>Profile Picture</h3>
-    <img height="200" width="200" src="{{imagePath}}" />
 
-    <form>
-      <input type="file" size="60" class="form-control" (change)="onFileSelected($event)" name="uploadFile" id="uploadFile" />
+    <div class="col-lg-2">
+      <img height="200" width="200" src="{{imagePath}}" />
+      <form>
+        <input type="file" size="60" class="form-control" (change)="onFileSelected($event)" name="uploadFile" id="uploadFile" />
+        <button type="button" class="btn btn-primary" (click)="uploadProfile()">Upload</button>
+      </form>
+    </div>
 
-      <button type="button" class="btn btn-primary" (click)="uploadProfile()">Upload</button>
-    </form>
+    <div class="col-lg-6">
+      <legend>
+        <h3>Hello, {{displayName}}</h3>
+      </legend>
+      <h4>You are in {{currentGroupName}} Group</h4>
+      <h4>You are in {{currentChannel.name}} Channel</h4>
+    </div>
+
+    <div class="col-lg-4"></div>
 
   </div>
-  <div class="row">
-    <legend>
-      <h3>Hello, {{displayName}}</h3>
-    </legend>
-    <!-- <h4>You are {{usertypestring}} user</h4> -->
-    <h4>You are in {{currentGroupName}} Group</h4>
-    <h4>You are in {{currentChannel.name}} Channel</h4>
-  </div>
-
 </div>
 
 <div id="chat_history" style="overflow-y: auto; height: 500px">

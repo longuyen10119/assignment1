@@ -53,7 +53,8 @@ module.exports=(app, db)=>{
                 let query1 = {id:id, path: req.file.path}
                 profile.insertOne(query1, (err, result)=>{
                     assert.equal(err,null);
-                    res.send(result);
+                    let back = {succes: true, path: req.file.path}
+                    res.send(back);
                  });
             }else{ //if it does, do an update with the new file path
                 let query3 = {id:id} 
