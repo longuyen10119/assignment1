@@ -34,6 +34,7 @@ export class ChatroomComponent implements OnInit {
   public connection1;
   public connection2;
   public connection3;
+  public yesNoPic;
   selectedFile = null;
   imagePath="";
   ngOnInit() {
@@ -131,6 +132,7 @@ export class ChatroomComponent implements OnInit {
       if(typeof temp!==undefined){
         console.log(temp);
         this.imagePath = temp[1];
+        this.yesNoPic = true;
       }
     });
   }
