@@ -1,39 +1,55 @@
 <div class="card bg-info mb-3">
   <div class="row">
-
     <div class="col-lg-2">
-      <img height="200" width="200" src="{{imagePath}}" />
+      <img id="rcorners2" height="200" width="200" src="{{imagePath}}" />
       <form>
         <input type="file" size="60" class="form-control" (change)="onFileSelected($event)" name="uploadFile" id="uploadFile" />
         <button type="button" class="btn btn-primary" (click)="uploadProfile()">Upload</button>
       </form>
     </div>
-
-    <div class="col-lg-6">
-      <legend>
-        <h3>Hello, {{displayName}}</h3>
-      </legend>
-      <h4>You are in {{currentGroupName}} Group</h4>
-      <h4>You are in {{currentChannel.name}} Channel</h4>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-4">
+        <br> <br> 
+        <h3 style="color:#A02517">Hello {{displayName}}</h3>
+        <h6 style="color:#A02517">You are in {{currentGroupName}} Group</h6>
+        <h6 style="color:#A02517">You are in {{currentChannel.name}} Channel</h6>
+      
     </div>
 
-    <div class="col-lg-4"></div>
+    <div class="col-lg-5">
+      <div class="card text-white bg-info mb-3 col-sm-8" style="max-width: 20rem;">
+        <div class="card-header">Users In Channel</div>
+        <div class="card-body">
+          <tr *ngFor="let user of usersInChannel">
+            <td></td>
+          </tr>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>
+<div class="row">
 
-<div id="chat_history" style="overflow-y: auto; height: 500px">
-  <div *ngFor="let message of messages">
-    <p class="text-right" *ngIf="displayName==message.username">
-      {{message.message}}
-    </p>
-    <p class="text-left" *ngIf="displayName!=message.username">
-        <!-- <img *ngIf="yesNoPic==true" height="25" width="25" src="{{imagePath}}"/>  -->
-        {{message.username}}: {{message.message}}
-    </p>
+  <div class="col-lg-12">
+    <div id="chat_history" style="overflow-y: auto; height: 500px">
+      <div *ngFor="let message of messages">
+        <p id="rcornersMySelf" *ngIf="displayName==message.username">
+          {{message.message}}
+        </p>
+        <p id="rcornersOthers" *ngIf="displayName!=message.username">
+          <img id="rcorners3" *ngIf="message.path" height="40" width="40" src="{{message.path}}" /> <strong *ngIf="!message.path">{{message.username}}:</strong>
+          {{message.message}}
+        </p>
+      </div>
+    </div>
   </div>
 </div>
-
-
-<input [(ngModel)]="message" type="text" placeholder="message" id="message" name="message" class="form-control">
-<button (click)="sendMessage(message)" class="btn btn-primary">Send</button>
+<div class="row">
+  <div class="col-lg-11">
+    <input [(ngModel)]="message" type="text" placeholder="message" id="message" name="message" class="form-control">
+  </div>
+  <div class="col-lg-1">
+    <button (click)="sendMessage(message)" class="btn btn-primary">Send</button>
+  </div>
+</div>

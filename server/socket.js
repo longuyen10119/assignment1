@@ -28,19 +28,19 @@ module.exports = function(app, db, io){
             let channel = data.channel;
             let username = data.username;
             let message = data.message;
-
+            let path = data.path;
             // Check for name and message
             if (channel=='' || message ==''){
                 // Send error status
                 sendStatus('Please enter a name and message');
             } else{ // When there is something
                 // Insert this message into database
-                let query = {channel: channel, username: username, message: message};
+                let query = {channel: channel, username: username, message: message, path:path};
                 chatHistory.insertOne(query, function(){
                     // chatHistory.find({},{projection:{_id:0}}).limit(100).sort({_id:1}).toArray( (err, result) =>{
                     //     socket.emit('message', result);
                     // });
-                    let sendback = {channel: channel, username: username, message: message};
+                    let sendback = {channel: channel, username: username, message: message, path:path};
                     io.emit('message', sendback);
                 });
 

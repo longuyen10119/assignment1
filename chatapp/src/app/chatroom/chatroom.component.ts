@@ -24,7 +24,7 @@ export class ChatroomComponent implements OnInit {
   public usertypestring;
   public displayName;
   public channels;
-  public usersInChannel;
+  public usersInChannel=[];
   chooseusertype: String;
   currentGroupName: String;
   public currentgroup;
@@ -70,7 +70,7 @@ export class ChatroomComponent implements OnInit {
         
       });
       // Send out status
-      let status = {channel: this.currentChannel.name, username: 'Attention ' + this.displayName, status: 1}
+      let status = {channel: this.currentChannel.name, username: 'Attention ' + this.displayName, status: 1, path:this.imagePath}
       this.sockServer.sendStatus(status);
       // Getting messages
       this.connection2 = this.sockServer.getMessages().subscribe(message=>{
@@ -78,9 +78,10 @@ export class ChatroomComponent implements OnInit {
         let tempchannel = temp[0]
         let tempuser = temp[1]
         let tempmessage = temp[2]
+        let temppath = temp[3]
         if (tempchannel == this.currentChannel.name){
           this.messages = this.messages.filter(x => x.username.indexOf("Attention")==-1);
-          let addmessage = {channel:tempchannel, username: tempuser, message: tempmessage};
+          let addmessage = {channel:tempchannel, username: tempuser, message: tempmessage, path:temppath};
           this.messages.push(addmessage);
         }
         this.message = '';
@@ -93,11 +94,15 @@ export class ChatroomComponent implements OnInit {
         let temp = Object.values(message);
         console.log(temp);
         let statusMessage
+        // Parse the username message
+
         if(temp[0]==this.currentChannel.name){
           if(temp[2]==1){
             statusMessage = {channel:this.currentChannel.name, username:temp[1], message:'----------has just joined the chatroom----------------'};
+            this.usersInChannel.push({path:temp[3],username:temp[1]});
           } else{
             statusMessage = {channel:this.currentChannel.name, username:temp[1], message:'----------has just left the chatroom----------------'};
+            this.usersInChannel = this.usersInChannel.filter(x=>x.username!=temp[1])
           }
           this.messages.push(statusMessage);
         }
@@ -105,7 +110,8 @@ export class ChatroomComponent implements OnInit {
     }
   }
   sendMessage(){
-    this.sockServer.sendMessage({channel:this.currentChannel.name, username:this.displayName, message: this.message});
+    
+    this.sockServer.sendMessage({channel:this.currentChannel.name, username:this.displayName, message: this.message, path:this.imagePath});
   }
 
   ngOnDestroy(){
@@ -132,7 +138,7 @@ export class ChatroomComponent implements OnInit {
       if(typeof temp!==undefined){
         console.log(temp);
         this.imagePath = temp[1];
-        this.yesNoPic = true;
+        // this.yesNoPic = true;
       }
     });
   }
