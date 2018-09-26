@@ -155,5 +155,4 @@ export class ChatroomComponent implements OnInit {
       this.imagePath = res.path;
     });
   }
-
 }
