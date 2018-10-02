@@ -45,9 +45,14 @@ module.exports = (app, db) => {
         const collection = db.collection('users');
         var query = { name: req.body.name};
         var newvalues = { $set: { type: req.body.type } };
-        collection.updateOne(query, newvalues, function(err, res) {
+        collection.updateOne(query, newvalues, function(err, result) {
             if (err) throw err;
-            console.log("1 user updated");
+            console.log(result.body);
+            if(typeof(result.body)==undefined){
+                res.status(404).json('Not found')
+            }else{
+                console.log("1 user updated");
+            }
           });
         
     });

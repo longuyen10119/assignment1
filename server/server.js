@@ -41,7 +41,7 @@ MongoClient.connect(url, {
     if (err) {
         return console.log(err);
     }
-    console.log("Connected successfully to server");
+    console.log("Connected successfully to Database server");
 
     const db = client.db(dbName);
     ///// Let's try to create a sample database
@@ -196,6 +196,7 @@ MongoClient.connect(url, {
     // console.log('Server running on port ' + port);
     // });
 
+   
     // closing server function for mocha
     exports.closeServer = function(){
         server.close();
