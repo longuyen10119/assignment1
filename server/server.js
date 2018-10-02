@@ -196,5 +196,9 @@ MongoClient.connect(url, {
     // console.log('Server running on port ' + port);
     // });
 
+    // closing server function for mocha
+    exports.closeServer = function(){
+        server.close();
+      };
 
 });
