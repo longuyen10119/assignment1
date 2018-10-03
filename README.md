@@ -52,4 +52,5 @@ We are using MongoDB, connecting on port 27017. The database name is 'assignment
 * Chatroom
   * Where users send and receive messages
   * Able to upload profile picture
-
+## 5. UNIT API ROUTE TESTING WITH MOCHA
+Make sure to run npm install mocha, npm install chai. Navigate to server folder of the assignment. Then run npm test.
